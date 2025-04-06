@@ -49,8 +49,12 @@ class _BasketScreenState extends State<BasketScreen> {
             icon: Icon(Icons.close),
           ),
           title: Text(
-            "Корзина",
-            style: TextStyle(color: kTextColor, fontSize: 20),
+            "Корзина: ${basketProvider.totalPrice} с.",
+            style: TextStyle(
+              color: kTextColor,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           centerTitle: true,
         ),
@@ -73,86 +77,100 @@ class _BasketScreenState extends State<BasketScreen> {
                       padding: EdgeInsets.symmetric(
                         vertical: kDefaultPadding / 2,
                       ),
-                      child: Center(
-                        child: ListTile(
-                          leading: Image.network(items[index]['imageLink']),
-                          title: Text(
-                            items[index]['name'],
-                            style: TextStyle(color: kTextColor, fontSize: 20),
-                          ),
-                          trailing: SizedBox(
-                            width: 210,
-                            height: 50,
-                            child: Row(
-                              children: [
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    iconColor: kTextColor,
-                                    fixedSize: Size(70, 50),
-                                    backgroundColor: Colors.orange,
-                                  ),
-                                  onPressed: () {
-                                    if (basketProvider
-                                            .basket[items[index]['id']] <
-                                        20) {
-                                      setState(() {
-                                        basketProvider.addToBasket(
-                                          items[index]['id'],
-                                          items[index]['price'],
-                                          1,
-                                        );
-                                      });
-                                    }
-                                  },
-                                  child: Icon(Icons.add),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Center(
+                            child: ListTile(
+                              title: SizedBox(
+                                height: 100,
+                                width: 100,
+                                child: Image.network(
+                                  items[index]['imageLink'],
+                                  alignment: Alignment.topLeft,
                                 ),
-                                SizedBox(
-                                  height: 50,
-                                  width: 70,
-                                  child: Center(
-                                    child: Text(
-                                      basketProvider.basket[items[index]['id']]
-                                          .toString(),
-                                      style: TextStyle(
-                                        color: kTextColor,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
+                              ),
+                              trailing: SizedBox(
+                                width: 210,
+                                height: 50,
+                                child: Row(
+                                  children: [
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        iconColor: kTextColor,
+                                        fixedSize: Size(70, 50),
+                                        backgroundColor: Colors.orange,
+                                      ),
+                                      onPressed: () {
+                                        if (basketProvider
+                                                .basket[items[index]['id']] <
+                                            20) {
+                                          setState(() {
+                                            basketProvider.addToBasket(
+                                              items[index]['id'],
+                                              items[index]['price'],
+                                              1,
+                                            );
+                                          });
+                                        }
+                                      },
+                                      child: Icon(Icons.add),
+                                    ),
+                                    SizedBox(
+                                      height: 50,
+                                      width: 70,
+                                      child: Center(
+                                        child: Text(
+                                          basketProvider
+                                              .basket[items[index]['id']]
+                                              .toString(),
+                                          style: TextStyle(
+                                            color: kTextColor,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ),
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    iconColor: kTextColor,
-                                    fixedSize: Size(70, 50),
-                                    backgroundColor: Colors.orange,
-                                  ),
-                                  onPressed: () {
-                                    if (basketProvider
-                                            .basket[items[index]['id']] >
-                                        0) {
-                                      setState(() {
-                                        basketProvider.removeFormBasket(
-                                          items[index]['id'],
-                                          items[index]['price'],
-                                        );
-
-                                        if (getCurrentItemCounts(
-                                              dataProvider.data,
-                                              basketProvider.basket,
-                                            ) ==
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        iconColor: kTextColor,
+                                        fixedSize: Size(70, 50),
+                                        backgroundColor: Colors.orange,
+                                      ),
+                                      onPressed: () {
+                                        if (basketProvider
+                                                .basket[items[index]['id']] >
                                             0) {
-                                          Navigator.of(context).pop();
+                                          setState(() {
+                                            basketProvider.removeFormBasket(
+                                              items[index]['id'],
+                                              items[index]['price'],
+                                            );
+
+                                            if (getCurrentItemCounts(
+                                                  dataProvider.data,
+                                                  basketProvider.basket,
+                                                ) ==
+                                                0) {
+                                              Navigator.of(context).pop();
+                                            }
+                                          });
                                         }
-                                      });
-                                    }
-                                  },
-                                  child: Icon(Icons.remove),
+                                      },
+                                      child: Icon(Icons.remove),
+                                    ),
+                                  ],
                                 ),
-                              ],
+                              ),
                             ),
                           ),
-                        ),
+                          Text(
+                            "${items[index]['name']}: ${items[index]['price']} с.",
+                            style: TextStyle(color: kTextColor, fontSize: 20),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
                       ),
                     ),
                   );
