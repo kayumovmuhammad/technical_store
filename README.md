@@ -1,3 +1,3 @@
 # technical_store
 
-A new Flutter project.
+try there: https://best-technical-store.web.app/
