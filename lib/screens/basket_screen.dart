@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:technical_store/constants.dart';
 import 'package:technical_store/providers/basket_provider.dart';
 import 'package:technical_store/providers/data_provider.dart';
+import 'package:technical_store/providers/settings_provider.dart';
+import 'package:technical_store/screens/ordering_screen.dart';
 import 'package:technical_store/widgets/yes_no_dialog.dart';
 
 int getCurrentItemCounts(List data, Map basket) {
@@ -37,6 +39,7 @@ class _BasketScreenState extends State<BasketScreen> {
   Widget build(BuildContext context) {
     var basketProvider = Provider.of<BasketProvider>(context);
     var dataProvider = Provider.of<DataProvider>(context);
+    var settingsProvider = Provider.of<SettingsProvider>(context);
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -187,7 +190,20 @@ class _BasketScreenState extends State<BasketScreen> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.orange,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return OrderingScreen(
+                              number: settingsProvider.settings['number'],
+                              address: settingsProvider.settings['address'],
+                              name: settingsProvider.settings['name'],
+                            );
+                          },
+                        ),
+                      );
+                    },
                     child: Text(
                       "Заказать",
                       style: TextStyle(color: kTextColor, fontSize: 25),
