@@ -1,10 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:technical_store/constants.dart';
 import 'package:technical_store/providers/basket_provider.dart';
 import 'package:technical_store/providers/settings_provider.dart';
 import 'package:technical_store/screens/home_screen.dart';
+import 'package:dio/dio.dart';
+
+Future<void> sendOrder(
+  List items,
+  List counts,
+  String number,
+  String address,
+  String name,
+  String description,
+) async {
+  var dio = Dio();
+  var data = {
+    "items": items,
+    "counts": counts,
+    "number": number,
+    "address": address,
+    "name": name,
+    "description": description,
+  };
+  var response = await dio.post("http://127.0.0.1:8000/sale", data: data);
+  print(response.data);
+}
 
 class OrderingScreen extends StatefulWidget {
   final String number, address, name;
@@ -27,7 +50,7 @@ TextStyle textStyle = TextStyle(
 TextStyle inputTextStyle = TextStyle(color: kTextColor, fontSize: 20);
 
 class _OrderingScreenState extends State<OrderingScreen> {
-  String number = '', address = '', name = '', note = '';
+  String number = '', address = '', name = '', description = '';
 
   TextStyle textStyle = TextStyle(
     color: kTextColor,
@@ -122,9 +145,9 @@ class _OrderingScreenState extends State<OrderingScreen> {
                   Text("Примечание к заказу:", style: textStyle),
                   TextField(
                     maxLines: 3,
-                    controller: TextEditingController(text: note),
+                    controller: TextEditingController(text: description),
                     onChanged: (value) {
-                      note = value;
+                      description = value;
                     },
                     decoration: InputDecoration(
                       focusedBorder: OutlineInputBorder(
@@ -150,6 +173,17 @@ class _OrderingScreenState extends State<OrderingScreen> {
                   'address': address,
                   'name': name,
                 });
+
+                // List items = basketProvider.basket.keys.toList();
+
+                sendOrder(
+                  basketProvider.basket.keys.toList(),
+                  basketProvider.basket.values.toList(),
+                  number,
+                  address,
+                  name,
+                  description,
+                );
 
                 basketProvider.clearBasket();
 
