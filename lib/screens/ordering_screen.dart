@@ -25,8 +25,7 @@ Future<void> sendOrder(
     "name": name,
     "description": description,
   };
-  var response = await dio.post("http://127.0.0.1:8000/sale", data: data);
-  print(response.data);
+  await dio.post("$ipAddress/sale", data: data);
 }
 
 class OrderingScreen extends StatefulWidget {
@@ -42,22 +41,8 @@ class OrderingScreen extends StatefulWidget {
   State<OrderingScreen> createState() => _OrderingScreenState();
 }
 
-TextStyle textStyle = TextStyle(
-  color: kTextColor,
-  fontSize: 20,
-  fontWeight: FontWeight.bold,
-);
-TextStyle inputTextStyle = TextStyle(color: kTextColor, fontSize: 20);
-
 class _OrderingScreenState extends State<OrderingScreen> {
   String number = '', address = '', name = '', description = '';
-
-  TextStyle textStyle = TextStyle(
-    color: kTextColor,
-    fontSize: 20,
-    fontWeight: FontWeight.bold,
-  );
-  TextStyle inputTextStyle = TextStyle(color: kTextColor, fontSize: 20);
 
   @override
   void initState() {
@@ -71,6 +56,7 @@ class _OrderingScreenState extends State<OrderingScreen> {
   Widget build(BuildContext context) {
     var settingsProvider = Provider.of<SettingsProvider>(context);
     var basketProvider = Provider.of<BasketProvider>(context);
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -79,14 +65,7 @@ class _OrderingScreenState extends State<OrderingScreen> {
           },
           icon: Icon(Icons.close),
         ),
-        title: Text(
-          "Оформление заказа",
-          style: TextStyle(
-            color: kTextColor,
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        title: Text("Оформление заказа"),
         centerTitle: true,
       ),
       body: Column(
@@ -96,7 +75,7 @@ class _OrderingScreenState extends State<OrderingScreen> {
               padding: EdgeInsets.symmetric(horizontal: kDefaultPadding / 2),
               child: ListView(
                 children: [
-                  Text("Номер телефона:", style: textStyle),
+                  Text("Номер телефона:", style: theme.textTheme.headlineSmall),
                   TextField(
                     keyboardType: TextInputType.phone,
                     inputFormatters: [
@@ -106,7 +85,7 @@ class _OrderingScreenState extends State<OrderingScreen> {
                     onChanged: (value) {
                       number = value;
                     },
-                    style: inputTextStyle,
+                    style: theme.textTheme.bodySmall,
                     decoration: InputDecoration(
                       focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.black, width: 1.5),
@@ -114,35 +93,38 @@ class _OrderingScreenState extends State<OrderingScreen> {
                       border: OutlineInputBorder(),
                     ),
                   ),
-                  Text("Адрес:", style: textStyle),
+                  Text("Адрес:", style: theme.textTheme.headlineSmall),
                   TextField(
                     controller: TextEditingController(text: address),
                     onChanged: (value) {
                       address = value;
                     },
-                    style: inputTextStyle,
+                    style: theme.textTheme.bodySmall,
                     decoration: InputDecoration(
                       focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black, width: 1.5),
+                        borderSide: BorderSide(color: kTextColor, width: 1.5),
                       ),
                       border: OutlineInputBorder(),
                     ),
                   ),
-                  Text("Имя:", style: textStyle),
+                  Text("Имя:", style: theme.textTheme.headlineSmall),
                   TextField(
                     controller: TextEditingController(text: name),
                     onChanged: (value) {
                       name = value;
                     },
-                    style: inputTextStyle,
+                    style: theme.textTheme.bodySmall,
                     decoration: InputDecoration(
                       focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black, width: 1.5),
+                        borderSide: BorderSide(color: kTextColor, width: 1.5),
                       ),
                       border: OutlineInputBorder(),
                     ),
                   ),
-                  Text("Примечание к заказу:", style: textStyle),
+                  Text(
+                    "Примечание к заказу:",
+                    style: theme.textTheme.headlineSmall,
+                  ),
                   TextField(
                     maxLines: 3,
                     controller: TextEditingController(text: description),
@@ -151,11 +133,11 @@ class _OrderingScreenState extends State<OrderingScreen> {
                     },
                     decoration: InputDecoration(
                       focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black, width: 1.5),
+                        borderSide: BorderSide(color: kTextColor, width: 1.5),
                       ),
                       border: OutlineInputBorder(),
                     ),
-                    style: inputTextStyle,
+                    style: theme.textTheme.bodySmall,
                   ),
                 ],
               ),
@@ -167,7 +149,7 @@ class _OrderingScreenState extends State<OrderingScreen> {
             width: (MediaQuery.of(context).size.width),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
-              onPressed: () {
+              onPressed: () async {
                 settingsProvider.updateSettings({
                   'number': number,
                   'address': address,
@@ -176,7 +158,7 @@ class _OrderingScreenState extends State<OrderingScreen> {
 
                 // List items = basketProvider.basket.keys.toList();
 
-                sendOrder(
+                await sendOrder(
                   basketProvider.basket.keys.toList(),
                   basketProvider.basket.values.toList(),
                   number,
@@ -197,10 +179,7 @@ class _OrderingScreenState extends State<OrderingScreen> {
                   (Route<dynamic> route) => false,
                 );
               },
-              child: Text(
-                "Оформить Заказ",
-                style: TextStyle(color: kTextColor, fontSize: 25),
-              ),
+              child: Text("Оформить Заказ", style: theme.textTheme.bodyMedium),
             ),
           ),
         ],

@@ -1,49 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:technical_store/constants.dart';
+import 'package:technical_store/functions/home_functions.dart';
 import 'package:technical_store/providers/basket_provider.dart';
 import 'package:technical_store/providers/data_provider.dart';
+import 'package:technical_store/providers/home_provider.dart';
 import 'package:technical_store/screens/basket_screen.dart';
-import 'package:technical_store/widgets/item_card.dart';
+import 'package:technical_store/widgets/search_line.dart';
+import 'package:technical_store/widgets/static_items_list.dart';
 
-List getCategories(List items) {
-  Set categories = {'Все'};
-
-  for (var item in items) {
-    categories.add(item["category"]);
+Widget getWidgetForShowing(
+  String status,
+  List productsByCategory,
+  List resultOfSearch,
+) {
+  if (status == ShowStatus().showStatic) {
+    return StaticItemsList(
+      productsByCategory: productsByCategory,
+      maxItems: 500,
+    );
+  } else if (status == ShowStatus().showingResult) {
+    return StaticItemsList(productsByCategory: [resultOfSearch], maxItems: inf);
   }
-
-  return categories.toList();
-}
-
-List getProductsByCategory(List items) {
-  Set categories = {'Все'};
-
-  for (var item in items) {
-    categories.add(item["category"]);
-  }
-
-  List<List> productsByCategory = [];
-
-  for (var item in categories) {
-    List products = [];
-    for (var ind = 0; ind < items.length; ind++) {
-      if (items[ind]['category'] == item || item == 'Все') {
-        products.add(ind);
-      }
-    }
-    productsByCategory.add(products);
-  }
-
-  return productsByCategory;
-}
-
-int getAxisCount(double width, double height) {
-  if (width > height) {
-    return 4;
-  } else {
-    return 2;
-  }
+  return Center(child: Text("Поиск..."));
 }
 
 class Home extends StatefulWidget {
@@ -56,11 +35,12 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   List categories = [];
   List productsByCategory = [];
-  int selectedCategory = 0;
   @override
   Widget build(BuildContext context) {
     final dataProvider = Provider.of<DataProvider>(context);
     final basketProvider = Provider.of<BasketProvider>(context);
+    final homeProvider = Provider.of<HomeProvider>(context);
+    final theme = Theme.of(context);
     categories = getCategories(dataProvider.data);
     productsByCategory = getProductsByCategory(dataProvider.data);
     return SafeArea(
@@ -93,7 +73,7 @@ class _HomeState extends State<Home> {
                         Icon(Icons.shopping_cart, color: kTextColor),
                         Text(
                           "${basketProvider.totalPrice.toString()} c.",
-                          style: TextStyle(color: kTextColor, fontSize: 20),
+                          style: theme.textTheme.bodySmall,
                         ),
                       ],
                     ),
@@ -104,16 +84,22 @@ class _HomeState extends State<Home> {
             children: [
               Icon(Icons.computer),
               SizedBox(width: kDefaultPadding / 5),
-              Text(
-                "Technical Store",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
+              Text("Technical Store"),
             ],
           ),
         ),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            Padding(
+              padding: EdgeInsets.fromLTRB(
+                kDefaultPadding / 2,
+                0,
+                kDefaultPadding / 2,
+                kDefaultPadding / 2,
+              ),
+              child: SearchLine(),
+            ),
             SizedBox(
               height: 50,
               child: ListView.builder(
@@ -122,9 +108,8 @@ class _HomeState extends State<Home> {
                 itemBuilder: (context, index) {
                   return GestureDetector(
                     onTap: () {
-                      setState(() {
-                        selectedCategory = index;
-                      });
+                      homeProvider.setStatus(ShowStatus().showStatic);
+                      homeProvider.setSelectedCategory(index);
                     },
                     child: Container(
                       padding: EdgeInsets.symmetric(
@@ -136,11 +121,15 @@ class _HomeState extends State<Home> {
                             categories[index],
                             style: TextStyle(
                               color:
-                                  index == selectedCategory
+                                  (index == (homeProvider.selectedCategory) &&
+                                          homeProvider.status ==
+                                              ShowStatus().showStatic)
                                       ? kTextColor
                                       : kTextLightColor,
                               fontWeight:
-                                  index == selectedCategory
+                                  (index == (homeProvider.selectedCategory) &&
+                                          homeProvider.status ==
+                                              ShowStatus().showStatic)
                                       ? FontWeight.w600
                                       : FontWeight.normal,
                               fontSize: 17,
@@ -152,7 +141,9 @@ class _HomeState extends State<Home> {
                             width: 30,
                             decoration: BoxDecoration(
                               color:
-                                  index == selectedCategory
+                                  (index == (homeProvider.selectedCategory) &&
+                                          homeProvider.status ==
+                                              ShowStatus().showStatic)
                                       ? kTextColor
                                       : Colors.transparent,
                             ),
@@ -167,27 +158,11 @@ class _HomeState extends State<Home> {
             Expanded(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: kDefaultPadding / 2),
-                child: GridView.builder(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: getAxisCount(
-                      MediaQuery.of(context).size.width,
-                      MediaQuery.of(context).size.height,
-                    ),
-                    mainAxisSpacing: kDefaultPadding / 2,
-                    crossAxisSpacing: kDefaultPadding / 2,
-                    childAspectRatio: 0.75,
-                  ),
-                  itemCount: productsByCategory[selectedCategory].length,
-                  itemBuilder: (context, index) {
-                    var currentProduct =
-                        dataProvider
-                            .data[productsByCategory[selectedCategory][index]];
-                    return ItemCard(
-                      currentProduct: currentProduct,
-                      mainIndex: productsByCategory[selectedCategory][index],
-                    );
-                  },
-                ),
+                child: (getWidgetForShowing(
+                  homeProvider.status,
+                  productsByCategory,
+                  homeProvider.resultOfSearch,
+                )),
               ),
             ),
           ],

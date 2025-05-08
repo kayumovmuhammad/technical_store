@@ -37,28 +37,20 @@ class BasketScreen extends StatefulWidget {
 class _BasketScreenState extends State<BasketScreen> {
   @override
   Widget build(BuildContext context) {
-    var basketProvider = Provider.of<BasketProvider>(context);
-    var dataProvider = Provider.of<DataProvider>(context);
-    var settingsProvider = Provider.of<SettingsProvider>(context);
+    final basketProvider = Provider.of<BasketProvider>(context);
+    final dataProvider = Provider.of<DataProvider>(context);
+    final settingsProvider = Provider.of<SettingsProvider>(context);
+    final theme = Theme.of(context);
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
           leading: IconButton(
-            color: Colors.black,
-            focusColor: Colors.white,
             onPressed: () {
               Navigator.of(context).pop();
             },
             icon: Icon(Icons.close),
           ),
-          title: Text(
-            "Корзина: ${basketProvider.totalPrice} с.",
-            style: TextStyle(
-              color: kTextColor,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          title: Text("Корзина: ${basketProvider.totalPrice} с."),
           centerTitle: true,
         ),
         body: Column(
@@ -75,7 +67,6 @@ class _BasketScreenState extends State<BasketScreen> {
                     basketProvider.basket,
                   );
                   return Card(
-                    color: Color.fromARGB(255, 255, 255, 255),
                     child: Padding(
                       padding: EdgeInsets.symmetric(
                         vertical: kDefaultPadding / 2,
@@ -170,7 +161,7 @@ class _BasketScreenState extends State<BasketScreen> {
                           ),
                           Text(
                             "${items[index]['name']}: ${items[index]['price']} с.",
-                            style: TextStyle(color: kTextColor, fontSize: 20),
+                            style: theme.textTheme.bodySmall,
                             textAlign: TextAlign.center,
                           ),
                         ],
@@ -204,10 +195,7 @@ class _BasketScreenState extends State<BasketScreen> {
                         ),
                       );
                     },
-                    child: Text(
-                      "Заказать",
-                      style: TextStyle(color: kTextColor, fontSize: 25),
-                    ),
+                    child: Text("Заказать", style: theme.textTheme.bodyMedium),
                   ),
                 ),
                 Container(
@@ -216,7 +204,7 @@ class _BasketScreenState extends State<BasketScreen> {
                   width: (MediaQuery.of(context).size.width) / 2,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 211, 211, 211),
+                      backgroundColor: kCancelButton,
                     ),
                     onPressed: () {
                       showDialog(
@@ -232,10 +220,7 @@ class _BasketScreenState extends State<BasketScreen> {
                         },
                       );
                     },
-                    child: Text(
-                      "Очистить",
-                      style: TextStyle(color: kTextColor, fontSize: 25),
-                    ),
+                    child: Text("Очистить", style: theme.textTheme.bodyMedium),
                   ),
                 ),
               ],

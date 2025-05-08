@@ -20,6 +20,10 @@ class AddToBasketScreenState extends State<AddToBasketScreen> {
   Widget build(BuildContext context) {
     final basketProvider = Provider.of<BasketProvider>(context);
     final dataProvider = Provider.of<DataProvider>(context);
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+    final imageSide = min(height / 3, width);
+    final themeData = Theme.of(context);
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -44,10 +48,7 @@ class AddToBasketScreenState extends State<AddToBasketScreen> {
                   );
                   Navigator.of(context).pop();
                 },
-                child: Text(
-                  "Готово",
-                  style: TextStyle(color: kTextColor, fontSize: 20),
-                ),
+                child: Text("Готово", style: themeData.textTheme.bodySmall),
               ),
             ),
           ],
@@ -59,47 +60,33 @@ class AddToBasketScreenState extends State<AddToBasketScreen> {
             // crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
-                width: min(
-                  MediaQuery.of(context).size.height,
-                  MediaQuery.of(context).size.width,
-                ),
-                height: min(
-                  MediaQuery.of(context).size.height,
-                  MediaQuery.of(context).size.width,
-                ),
+                width: imageSide,
+                height: imageSide,
                 child: Image.network(
                   dataProvider.data[widget.index]["imageLink"],
                 ),
               ),
               Text(
                 dataProvider.data[widget.index]["name"],
-                style: TextStyle(
-                  color: kTextColor,
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: themeData.textTheme.headlineLarge,
                 textAlign: TextAlign.center,
               ),
               Text(
                 "${dataProvider.data[widget.index]["price"].toString()} с.",
-                style: TextStyle(color: priceColor, fontSize: 20),
+                style: themeData.textTheme.titleSmall,
                 textAlign: TextAlign.center,
               ),
               if (dataProvider.data[widget.index]["description"].toString() !=
                   "null")
                 Text(
                   dataProvider.data[widget.index]["description"].toString(),
-                  style: TextStyle(color: kTextColor, fontSize: 20),
+                  style: themeData.textTheme.bodySmall,
                   textAlign: TextAlign.center,
                 ),
               SizedBox(height: kDefaultPadding / 2),
               Text(
                 "Количество:",
-                style: TextStyle(
-                  color: kTextColor,
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: themeData.textTheme.headlineLarge,
                 textAlign: TextAlign.center,
               ),
               Row(
@@ -154,11 +141,7 @@ class AddToBasketScreenState extends State<AddToBasketScreen> {
               SizedBox(height: kDefaultPadding / 2),
               Text(
                 "Общая цена: ${dataProvider.data[widget.index]["price"] * counts} с.",
-                style: TextStyle(
-                  color: kTextColor,
-                  fontSize: 25,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: themeData.textTheme.headlineLarge,
                 textAlign: TextAlign.center,
               ),
             ],

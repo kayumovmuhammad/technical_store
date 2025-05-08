@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:technical_store/constants.dart';
 
 class YesNoDialog extends StatefulWidget {
   final String answer;
@@ -14,21 +13,22 @@ class YesNoDialog extends StatefulWidget {
 class _OkNoDialogState extends State<YesNoDialog> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return AlertDialog(
       title: Text(widget.answer),
       actions: [
         TextButton(
           onPressed: () {
-            widget.doIfYes(); 
+            widget.doIfYes();
             Navigator.of(context).pop();
           },
-          child: Text("Да", style: TextStyle(color: kTextColor, fontSize: 20)),
+          child: Text("Да", style: theme.textTheme.bodySmall),
         ),
         TextButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: Text("Нет", style: TextStyle(color: kTextColor, fontSize: 20)),
+          child: Text("Нет", style: theme.textTheme.bodySmall),
         ),
       ],
     );

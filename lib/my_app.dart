@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:technical_store/screens/home_screen.dart';
+import 'package:technical_store/themes/themes.dart';
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -13,14 +14,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primaryColor: Colors.black,
-        scaffoldBackgroundColor: Colors.white,
-        appBarTheme: AppBarTheme(
-          backgroundColor: Colors.white,
-          surfaceTintColor: Colors.white,
-        ),
-      ),
+      theme: lightTheme,
       home: Home(),
     );
   }

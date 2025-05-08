@@ -1,9 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:technical_store/constants.dart';
 
 Future<List> initData() async {
   var dio = Dio();
-  var response = await dio.get("http://127.0.0.1:8000/info/data");
+  var response = await dio.get("$ipAddress/info/data");
   var data = response.data as List;
 
   return data;

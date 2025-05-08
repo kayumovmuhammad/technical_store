@@ -18,6 +18,7 @@ class ItemCard extends StatefulWidget {
 class _ItemCardState extends State<ItemCard> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -43,19 +44,11 @@ class _ItemCardState extends State<ItemCard> {
               ),
               Text(
                 widget.currentProduct["name"],
-                style: TextStyle(
-                  color: kTextColor,
-                  fontSize: 17,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: theme.textTheme.headlineMedium,
               ),
               Text(
                 "${widget.currentProduct["price"]} с.",
-                style: TextStyle(
-                  color: priceColor,
-                  fontSize: 17,
-                  fontWeight: FontWeight.w500,
-                ),
+                style: theme.textTheme.titleSmall,
               ),
             ],
           ),

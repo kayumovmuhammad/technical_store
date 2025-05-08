@@ -13,6 +13,8 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   provider: ^6.1.4
+  searchfield: ^1.2.9
+  standard_searchbar: ^2.1.1
 
 dev_dependencies:
   flutter_test:
