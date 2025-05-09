@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:technical_store/constants.dart';
 import 'package:technical_store/functions/home_functions.dart';
+import 'package:technical_store/widgets/main_drawer.dart';
 import 'package:technical_store/providers/basket_provider.dart';
 import 'package:technical_store/providers/data_provider.dart';
 import 'package:technical_store/providers/home_provider.dart';
@@ -45,6 +46,7 @@ class _HomeState extends State<Home> {
     productsByCategory = getProductsByCategory(dataProvider.data);
     return SafeArea(
       child: Scaffold(
+        drawer: MainDrawer(),
         floatingActionButton:
             basketProvider.totalPrice == 0
                 ? null

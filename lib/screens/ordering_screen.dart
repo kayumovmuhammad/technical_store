@@ -86,12 +86,6 @@ class _OrderingScreenState extends State<OrderingScreen> {
                       number = value;
                     },
                     style: theme.textTheme.bodySmall,
-                    decoration: InputDecoration(
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black, width: 1.5),
-                      ),
-                      border: OutlineInputBorder(),
-                    ),
                   ),
                   Text("Адрес:", style: theme.textTheme.headlineSmall),
                   TextField(
@@ -100,12 +94,6 @@ class _OrderingScreenState extends State<OrderingScreen> {
                       address = value;
                     },
                     style: theme.textTheme.bodySmall,
-                    decoration: InputDecoration(
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: kTextColor, width: 1.5),
-                      ),
-                      border: OutlineInputBorder(),
-                    ),
                   ),
                   Text("Имя:", style: theme.textTheme.headlineSmall),
                   TextField(
@@ -114,12 +102,6 @@ class _OrderingScreenState extends State<OrderingScreen> {
                       name = value;
                     },
                     style: theme.textTheme.bodySmall,
-                    decoration: InputDecoration(
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: kTextColor, width: 1.5),
-                      ),
-                      border: OutlineInputBorder(),
-                    ),
                   ),
                   Text(
                     "Примечание к заказу:",
@@ -131,12 +113,6 @@ class _OrderingScreenState extends State<OrderingScreen> {
                     onChanged: (value) {
                       description = value;
                     },
-                    decoration: InputDecoration(
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: kTextColor, width: 1.5),
-                      ),
-                      border: OutlineInputBorder(),
-                    ),
                     style: theme.textTheme.bodySmall,
                   ),
                 ],

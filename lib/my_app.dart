@@ -16,6 +16,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       theme: lightTheme,
       home: Home(),
+      // home: Scaffold(),
     );
   }
 }

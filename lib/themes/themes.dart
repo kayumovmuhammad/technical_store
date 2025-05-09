@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:technical_store/constants.dart';
 
 ThemeData lightTheme = ThemeData(
-  dialogTheme: DialogTheme(
-    backgroundColor: Colors.white,
-  ),
+  drawerTheme: DrawerThemeData(backgroundColor: Colors.white),
+  primaryColor: Colors.orange,
+  dialogTheme: DialogTheme(backgroundColor: Colors.white),
   focusColor: Colors.white,
   iconTheme: IconThemeData(color: Colors.black),
   cardTheme: CardTheme(color: Colors.white),
@@ -36,7 +36,17 @@ ThemeData lightTheme = ThemeData(
     ),
     titleSmall: TextStyle(color: priceColor, fontSize: 20),
     bodySmall: TextStyle(color: kTextColor, fontSize: 20),
-    headlineSmall: TextStyle(color: kTextColor, fontSize: 20, fontWeight: FontWeight.bold),
+    headlineSmall: TextStyle(
+      color: kTextColor,
+      fontSize: 20,
+      fontWeight: FontWeight.bold,
+    ),
     bodyMedium: TextStyle(color: kTextColor, fontSize: 25),
+  ),
+  inputDecorationTheme: InputDecorationTheme(
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(color: kTextColor, width: 1.5),
+    ),
+    border: OutlineInputBorder(),
   ),
 );
