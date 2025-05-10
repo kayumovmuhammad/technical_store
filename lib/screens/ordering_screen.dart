@@ -3,6 +3,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:technical_store/constants.dart';
+import 'package:technical_store/functions/n_push_and_remove_until.dart';
 import 'package:technical_store/providers/basket_provider.dart';
 import 'package:technical_store/providers/settings_provider.dart';
 import 'package:technical_store/screens/home_screen.dart';
@@ -43,13 +44,27 @@ class OrderingScreen extends StatefulWidget {
 
 class _OrderingScreenState extends State<OrderingScreen> {
   String number = '', address = '', name = '', description = '';
+  late TextEditingController nameController,
+      addressController,
+      numberController;
 
   @override
   void initState() {
     number = widget.number;
     address = widget.address;
     name = widget.name;
+    nameController = TextEditingController(text: name);
+    addressController = TextEditingController(text: address);
+    numberController = TextEditingController(text: number);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    addressController.dispose();
+    numberController.dispose();
+    super.dispose();
   }
 
   @override
@@ -81,7 +96,7 @@ class _OrderingScreenState extends State<OrderingScreen> {
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp('[0-9+]')),
                     ],
-                    controller: TextEditingController(text: number),
+                    controller: numberController,
                     onChanged: (value) {
                       number = value;
                     },
@@ -97,7 +112,7 @@ class _OrderingScreenState extends State<OrderingScreen> {
                   ),
                   Text("Имя:", style: theme.textTheme.headlineSmall),
                   TextField(
-                    controller: TextEditingController(text: name),
+                    controller: nameController,
                     onChanged: (value) {
                       name = value;
                     },
@@ -109,7 +124,7 @@ class _OrderingScreenState extends State<OrderingScreen> {
                   ),
                   TextField(
                     maxLines: 3,
-                    controller: TextEditingController(text: description),
+                    controller: addressController,
                     onChanged: (value) {
                       description = value;
                     },
@@ -132,8 +147,6 @@ class _OrderingScreenState extends State<OrderingScreen> {
                   'name': name,
                 });
 
-                // List items = basketProvider.basket.keys.toList();
-
                 await sendOrder(
                   basketProvider.basket.keys.toList(),
                   basketProvider.basket.values.toList(),
@@ -145,15 +158,7 @@ class _OrderingScreenState extends State<OrderingScreen> {
 
                 basketProvider.clearBasket();
 
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return Home();
-                    },
-                  ),
-                  (Route<dynamic> route) => false,
-                );
+                nPushAndRemoveUntil(context, Home());
               },
               child: Text("Оформить Заказ", style: theme.textTheme.bodyMedium),
             ),

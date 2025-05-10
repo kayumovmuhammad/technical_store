@@ -4,12 +4,6 @@
         "category": "Ноутбуки",
         "name": "Ноутбук HP Victus - core i5/16/256",
         "description": "Процессор: core i5-14 gen\nВидеокарта: RTX 3050\nОперативная память: 16 GB\nНакопитель: 256 GB SSD",
-        "specifications": {
-            "Процессор": "core i5-14 gen",
-            "Видеокарта": "RTX 3050",
-            "Оперативная память": "16 GB",
-            "Накопитель": "256 GB SSD"
-        },
         "imageLink": "https://i.ibb.co/VcHy3Wv2/1.png",
         "price": 8500
     },
@@ -17,11 +11,7 @@
         "id": 2,
         "category": "Ноутбуки",
         "name": "Ноутбук Acer - core i3/4/128",
-        "specifications": {
-            "Процессор": "core i3-11 gen",
-            "Оперативная память": "4 GB",
-            "Накопитель": "128 GB SSD"
-        },
+        "description": "",
         "imageLink": "https://i.ibb.co/600DDFNP/2.jpg",
         "price": 3500
     },
@@ -29,12 +19,7 @@
         "id": 3,
         "category": "Ноутбуки",
         "name": "Ноутбук Asus - core i7/32/1TB",
-        "specifications": {
-            "Процессор": "core i7-14 gen",
-            "Видеокарта": "RTX 4070",
-            "Оперативная память": "32 GB",
-            "Накопитель": "1 TB SSD"
-        },
+        "description": "",
         "imageLink": "https://i.ibb.co/230ccxHp/3.png",
         "price": 3500
     },
@@ -42,6 +27,7 @@
         "id": 4,
         "name": "Клавиатура Logitech",
         "category": "Клавиатуры",
+        "description": "",
         "imageLink": "https://i.ibb.co/jP8HFh8w/4.jpg",
         "price": 250
     },
