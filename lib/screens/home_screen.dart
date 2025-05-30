@@ -66,7 +66,7 @@ class _HomeState extends State<Home> {
                         MaterialPageRoute(builder: (context) => BasketScreen()),
                       );
                     },
-                    backgroundColor: Colors.orange,
+                    backgroundColor: theme.primaryColor,
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.center,

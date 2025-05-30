@@ -1,14 +1,15 @@
 import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:technical_store/constants.dart';
+import 'package:technical_store/models/item_model.dart';
 import 'package:technical_store/providers/basket_provider.dart';
-import 'package:technical_store/providers/data_provider.dart';
 
 class AddToBasketScreen extends StatefulWidget {
-  final int index;
-  const AddToBasketScreen({super.key, required this.index});
+  final ItemModel currentItem;
+  const AddToBasketScreen({super.key, required this.currentItem});
 
   @override
   State<AddToBasketScreen> createState() => AddToBasketScreenState();
@@ -16,14 +17,14 @@ class AddToBasketScreen extends StatefulWidget {
 
 class AddToBasketScreenState extends State<AddToBasketScreen> {
   int counts = 0;
+
   @override
   Widget build(BuildContext context) {
     final basketProvider = Provider.of<BasketProvider>(context);
-    final dataProvider = Provider.of<DataProvider>(context);
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     final imageSide = min(height / 3, width);
-    final themeData = Theme.of(context);
+    final theme = Theme.of(context);
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -39,16 +40,18 @@ class AddToBasketScreenState extends State<AddToBasketScreen> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: kDefaultPadding / 2),
               child: ElevatedButton(
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: theme.primaryColor,
+                ),
                 onPressed: () {
                   basketProvider.addToBasket(
-                    dataProvider.data[widget.index]['id'],
-                    dataProvider.data[widget.index]['price'],
+                    widget.currentItem.id,
+                    widget.currentItem.price,
                     counts,
                   );
                   Navigator.of(context).pop();
                 },
-                child: Text("Готово", style: themeData.textTheme.bodySmall),
+                child: Text("Готово", style: theme.textTheme.bodySmall),
               ),
             ),
           ],
@@ -62,31 +65,37 @@ class AddToBasketScreenState extends State<AddToBasketScreen> {
               SizedBox(
                 width: imageSide,
                 height: imageSide,
-                child: Image.network(
-                  dataProvider.data[widget.index]["imageLink"],
+                child: CachedNetworkImage(
+                  imageUrl: widget.currentItem.imageLink,
+                  placeholder:
+                      (context, url) => Center(
+                        child: CircularProgressIndicator(
+                          color: theme.primaryColor,
+                        ),
+                      ),
                 ),
               ),
               Text(
-                dataProvider.data[widget.index]["name"],
-                style: themeData.textTheme.headlineLarge,
+                widget.currentItem.name,
+                style: theme.textTheme.headlineLarge,
                 textAlign: TextAlign.center,
               ),
               Text(
-                "${dataProvider.data[widget.index]["price"].toString()} с.",
-                style: themeData.textTheme.titleSmall,
+                "${widget.currentItem.price.toString()} с.",
+                style: theme.textTheme.titleSmall,
                 textAlign: TextAlign.center,
               ),
-              if (dataProvider.data[widget.index]["description"].toString() !=
+              if (widget.currentItem.description.toString() !=
                   "null")
                 Text(
-                  dataProvider.data[widget.index]["description"].toString(),
-                  style: themeData.textTheme.bodySmall,
+                  widget.currentItem.description.toString(),
+                  style: theme.textTheme.bodySmall,
                   textAlign: TextAlign.center,
                 ),
               SizedBox(height: kDefaultPadding / 2),
               Text(
                 "Количество:",
-                style: themeData.textTheme.headlineLarge,
+                style: theme.textTheme.headlineLarge,
                 textAlign: TextAlign.center,
               ),
               Row(
@@ -96,7 +105,7 @@ class AddToBasketScreenState extends State<AddToBasketScreen> {
                     style: ElevatedButton.styleFrom(
                       iconColor: kTextColor,
                       fixedSize: Size(70, 50),
-                      backgroundColor: Colors.orange,
+                      backgroundColor: theme.primaryColor,
                     ),
                     onPressed: () {
                       if (counts < 20) {
@@ -125,7 +134,7 @@ class AddToBasketScreenState extends State<AddToBasketScreen> {
                     style: ElevatedButton.styleFrom(
                       iconColor: kTextColor,
                       fixedSize: Size(70, 50),
-                      backgroundColor: Colors.orange,
+                      backgroundColor: theme.primaryColor,
                     ),
                     onPressed: () {
                       if (counts > 0) {
@@ -140,8 +149,8 @@ class AddToBasketScreenState extends State<AddToBasketScreen> {
               ),
               SizedBox(height: kDefaultPadding / 2),
               Text(
-                "Общая цена: ${dataProvider.data[widget.index]["price"] * counts} с.",
-                style: themeData.textTheme.headlineLarge,
+                "Общая цена: ${widget.currentItem.price * counts} с.",
+                style: theme.textTheme.headlineLarge,
                 textAlign: TextAlign.center,
               ),
             ],

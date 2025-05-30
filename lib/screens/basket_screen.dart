@@ -93,7 +93,7 @@ class _BasketScreenState extends State<BasketScreen> {
                                       style: ElevatedButton.styleFrom(
                                         iconColor: kTextColor,
                                         fixedSize: Size(70, 50),
-                                        backgroundColor: Colors.orange,
+                                        backgroundColor: theme.primaryColor,
                                       ),
                                       onPressed: () {
                                         if (basketProvider
@@ -130,7 +130,7 @@ class _BasketScreenState extends State<BasketScreen> {
                                       style: ElevatedButton.styleFrom(
                                         iconColor: kTextColor,
                                         fixedSize: Size(70, 50),
-                                        backgroundColor: Colors.orange,
+                                        backgroundColor: theme.primaryColor,
                                       ),
                                       onPressed: () {
                                         if (basketProvider
@@ -179,7 +179,7 @@ class _BasketScreenState extends State<BasketScreen> {
                   width: (MediaQuery.of(context).size.width) / 2,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.orange,
+                      backgroundColor: theme.primaryColor,
                     ),
                     onPressed: () {
                       Navigator.push(

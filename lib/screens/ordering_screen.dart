@@ -139,7 +139,7 @@ class _OrderingScreenState extends State<OrderingScreen> {
             height: 80,
             width: (MediaQuery.of(context).size.width),
             child: ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
+              style: ElevatedButton.styleFrom(backgroundColor: theme.primaryColor),
               onPressed: () async {
                 settingsProvider.updateSettings({
                   'number': number,

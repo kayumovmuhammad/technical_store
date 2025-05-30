@@ -1,6 +1,6 @@
 [
     {
-        "id": 1,
+        "id": 0,
         "category": "Ноутбуки",
         "name": "Ноутбук HP Victus - core i5/16/256",
         "description": "Процессор: core i5-14 gen\nВидеокарта: RTX 3050\nОперативная память: 16 GB\nНакопитель: 256 GB SSD",
@@ -8,7 +8,7 @@
         "price": 8500
     },
     {
-        "id": 2,
+        "id": 1,
         "category": "Ноутбуки",
         "name": "Ноутбук Acer - core i3/4/128",
         "description": "",
@@ -16,7 +16,7 @@
         "price": 3500
     },
     {
-        "id": 3,
+        "id": 2,
         "category": "Ноутбуки",
         "name": "Ноутбук Asus - core i7/32/1TB",
         "description": "",
@@ -24,7 +24,7 @@
         "price": 3500
     },
     {
-        "id": 4,
+        "id": 3,
         "name": "Клавиатура Logitech",
         "category": "Клавиатуры",
         "description": "",
@@ -32,11 +32,11 @@
         "price": 250
     },
     {
-        "id": 5,
-        "name": "Мышка HP",
-        "description": "Игровая мышка беспроводная",
-        "category": "Мышки",
-        "imageLink": "https://i.ibb.co/VsYSGnV/5.jpg",
-        "price": 100
+        "name": "Красовка",
+        "category": "Обуф",
+        "description": "Мета",
+        "imageLink": "https://static.insales-cdn.com/images/products/1/3039/855968735/IMG_0712.JPG",
+        "price": 828,
+        "id": 4
     }
 ]

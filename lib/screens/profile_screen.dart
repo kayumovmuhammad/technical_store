@@ -93,7 +93,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 padding: const EdgeInsets.all(kDefaultPadding / 2),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.orange,
+                    backgroundColor: theme.primaryColor,
                   ),
                   onPressed: () {
                     settingsProvider.updateSettings({
