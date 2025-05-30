@@ -66,7 +66,7 @@ class AddToBasketScreenState extends State<AddToBasketScreen> {
                 width: imageSide,
                 height: imageSide,
                 child: CachedNetworkImage(
-                  imageUrl: widget.currentItem.imageLink,
+                  imageUrl: widget.currentItem.imageLinks[0],
                   placeholder:
                       (context, url) => Center(
                         child: CircularProgressIndicator(

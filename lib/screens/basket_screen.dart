@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:technical_store/constants.dart';
+import 'package:technical_store/models/item_model.dart';
 import 'package:technical_store/providers/basket_provider.dart';
 import 'package:technical_store/providers/data_provider.dart';
 import 'package:technical_store/providers/settings_provider.dart';
@@ -9,18 +10,18 @@ import 'package:technical_store/widgets/yes_no_dialog.dart';
 
 int getCurrentItemCounts(List data, Map basket) {
   int counts = 0;
-  for (var item in data) {
-    if (basket[item['id']] != null && basket[item['id']] != 0) {
+  for (ItemModel item in data) {
+    if (basket[item.id] != null && basket[item.id] != 0) {
       counts++;
     }
   }
   return counts;
 }
 
-List getCurrentItems(List data, Map basket) {
-  List items = [];
-  for (var item in data) {
-    if (basket[item['id']] != null && basket[item['id']] != 0) {
+List<ItemModel> getCurrentItems(List data, Map basket) {
+  List<ItemModel> items = [];
+  for (ItemModel item in data) {
+    if (basket[item.id] != null && basket[item.id] != 0) {
       items.add(item);
     }
   }
@@ -62,7 +63,7 @@ class _BasketScreenState extends State<BasketScreen> {
                   basketProvider.basket,
                 ),
                 itemBuilder: (context, index) {
-                  List items = getCurrentItems(
+                  List<ItemModel> items = getCurrentItems(
                     dataProvider.data,
                     basketProvider.basket,
                   );
@@ -80,7 +81,7 @@ class _BasketScreenState extends State<BasketScreen> {
                                 height: 100,
                                 width: 100,
                                 child: Image.network(
-                                  items[index]['imageLink'],
+                                  items[index].imageLinks[0],
                                   alignment: Alignment.topLeft,
                                 ),
                               ),
@@ -97,12 +98,12 @@ class _BasketScreenState extends State<BasketScreen> {
                                       ),
                                       onPressed: () {
                                         if (basketProvider
-                                                .basket[items[index]['id']] <
+                                                .basket[items[index].id] <
                                             20) {
                                           setState(() {
                                             basketProvider.addToBasket(
-                                              items[index]['id'],
-                                              items[index]['price'],
+                                              items[index].id,
+                                              items[index].price,
                                               1,
                                             );
                                           });
@@ -116,7 +117,7 @@ class _BasketScreenState extends State<BasketScreen> {
                                       child: Center(
                                         child: Text(
                                           basketProvider
-                                              .basket[items[index]['id']]
+                                              .basket[items[index].id]
                                               .toString(),
                                           style: TextStyle(
                                             color: kTextColor,
@@ -134,12 +135,12 @@ class _BasketScreenState extends State<BasketScreen> {
                                       ),
                                       onPressed: () {
                                         if (basketProvider
-                                                .basket[items[index]['id']] >
+                                                .basket[items[index].id] >
                                             0) {
                                           setState(() {
                                             basketProvider.removeFormBasket(
-                                              items[index]['id'],
-                                              items[index]['price'],
+                                              items[index].id,
+                                              items[index].price,
                                             );
 
                                             if (getCurrentItemCounts(
@@ -160,7 +161,7 @@ class _BasketScreenState extends State<BasketScreen> {
                             ),
                           ),
                           Text(
-                            "${items[index]['name']}: ${items[index]['price']} с.",
+                            "${items[index].name}: ${items[index].price} с.",
                             style: theme.textTheme.bodySmall,
                             textAlign: TextAlign.center,
                           ),

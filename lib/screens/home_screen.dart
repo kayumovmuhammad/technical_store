@@ -36,6 +36,18 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   List categories = [];
   List productsByCategory = [];
+  bool isVisible = false;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration(milliseconds: 100), () {
+      setState(() {
+        isVisible = true;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final dataProvider = Provider.of<DataProvider>(context);
@@ -45,129 +57,133 @@ class _HomeState extends State<Home> {
     categories = getCategories(dataProvider.data);
     productsByCategory = getProductsByCategory(dataProvider.data);
     return SafeArea(
-      child: Scaffold(
-        drawer: MainDrawer(),
-        floatingActionButton:
-            basketProvider.totalPrice == 0
-                ? null
-                : SizedBox(
-                  height: 50,
-                  width:
-                      80 +
-                      12 *
-                          basketProvider.totalPrice
-                              .toString()
-                              .length
-                              .toDouble(),
-                  child: FloatingActionButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => BasketScreen()),
-                      );
-                    },
-                    backgroundColor: theme.primaryColor,
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Icon(Icons.shopping_cart, color: kTextColor),
-                        Text(
-                          "${basketProvider.totalPrice.toString()} c.",
-                          style: theme.textTheme.bodySmall,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-        appBar: AppBar(
-          title: Row(
-            children: [
-              Icon(Icons.computer),
-              SizedBox(width: kDefaultPadding / 5),
-              Text("Technical Store"),
-            ],
-          ),
-        ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.fromLTRB(
-                kDefaultPadding / 2,
-                0,
-                kDefaultPadding / 2,
-                kDefaultPadding / 2,
-              ),
-              child: SearchLine(),
-            ),
-            SizedBox(
-              height: 50,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: categories.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      homeProvider.setStatus(ShowStatus().showStatic);
-                      homeProvider.setSelectedCategory(index);
-                    },
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: kDefaultPadding / 2,
-                      ),
-                      child: Column(
+      child: AnimatedOpacity(
+        opacity: isVisible ? 1 : 0.2,
+        duration: Duration(milliseconds: 100),
+        child: Scaffold(
+          drawer: MainDrawer(),
+          floatingActionButton:
+              basketProvider.totalPrice == 0
+                  ? null
+                  : SizedBox(
+                    height: 50,
+                    width:
+                        80 +
+                        12 *
+                            basketProvider.totalPrice
+                                .toString()
+                                .length
+                                .toDouble(),
+                    child: FloatingActionButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => BasketScreen()),
+                        );
+                      },
+                      backgroundColor: theme.primaryColor,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
+                          Icon(Icons.shopping_cart, color: kTextColor),
                           Text(
-                            categories[index],
-                            style: TextStyle(
-                              color:
-                                  (index == (homeProvider.selectedCategory) &&
-                                          homeProvider.status ==
-                                              ShowStatus().showStatic)
-                                      ? kTextColor
-                                      : kTextLightColor,
-                              fontWeight:
-                                  (index == (homeProvider.selectedCategory) &&
-                                          homeProvider.status ==
-                                              ShowStatus().showStatic)
-                                      ? FontWeight.w600
-                                      : FontWeight.normal,
-                              fontSize: 17,
-                            ),
-                          ),
-                          SizedBox(height: kDefaultPadding / 4),
-                          Container(
-                            height: 2,
-                            width: 30,
-                            decoration: BoxDecoration(
-                              color:
-                                  (index == (homeProvider.selectedCategory) &&
-                                          homeProvider.status ==
-                                              ShowStatus().showStatic)
-                                      ? kTextColor
-                                      : Colors.transparent,
-                            ),
+                            "${basketProvider.totalPrice.toString()} c.",
+                            style: theme.textTheme.bodySmall,
                           ),
                         ],
                       ),
                     ),
-                  );
-                },
-              ),
+                  ),
+          appBar: AppBar(
+            title: Row(
+              children: [
+                Icon(Icons.computer),
+                SizedBox(width: kDefaultPadding / 5),
+                Text("Technical Store"),
+              ],
             ),
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: kDefaultPadding / 2),
-                child: (getWidgetForShowing(
-                  homeProvider.status,
-                  productsByCategory,
-                  homeProvider.resultOfSearch,
-                )),
+          ),
+          body: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.fromLTRB(
+                  kDefaultPadding / 2,
+                  0,
+                  kDefaultPadding / 2,
+                  kDefaultPadding / 2,
+                ),
+                child: SearchLine(),
               ),
-            ),
-          ],
+              SizedBox(
+                height: 50,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: categories.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        homeProvider.setStatus(ShowStatus().showStatic);
+                        homeProvider.setSelectedCategory(index);
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: kDefaultPadding / 2,
+                        ),
+                        child: Column(
+                          children: [
+                            Text(
+                              categories[index],
+                              style: TextStyle(
+                                color:
+                                    (index == (homeProvider.selectedCategory) &&
+                                            homeProvider.status ==
+                                                ShowStatus().showStatic)
+                                        ? kTextColor
+                                        : kTextLightColor,
+                                fontWeight:
+                                    (index == (homeProvider.selectedCategory) &&
+                                            homeProvider.status ==
+                                                ShowStatus().showStatic)
+                                        ? FontWeight.w600
+                                        : FontWeight.normal,
+                                fontSize: 17,
+                              ),
+                            ),
+                            SizedBox(height: kDefaultPadding / 4),
+                            Container(
+                              height: 2,
+                              width: 30,
+                              decoration: BoxDecoration(
+                                color:
+                                    (index == (homeProvider.selectedCategory) &&
+                                            homeProvider.status ==
+                                                ShowStatus().showStatic)
+                                        ? kTextColor
+                                        : Colors.transparent,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: kDefaultPadding / 2),
+                  child: (getWidgetForShowing(
+                    homeProvider.status,
+                    productsByCategory,
+                    homeProvider.resultOfSearch,
+                  )),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

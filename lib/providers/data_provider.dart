@@ -14,9 +14,9 @@ Future<List<ItemModel>> initData() async {
     ItemModel it = ItemModel(
       id: item["id"],
       name: item["name"],
-      categody: item["categody"],
+      categody: item["category"],
       description: item["description"],
-      imageLink: item["imageLink"],
+      imageLinks: item["imageLinks"],
       price: item["price"],
     );
     data.add(it);

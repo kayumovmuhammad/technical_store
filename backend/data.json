@@ -4,7 +4,7 @@
         "category": "Ноутбуки",
         "name": "Ноутбук HP Victus - core i5/16/256",
         "description": "Процессор: core i5-14 gen\nВидеокарта: RTX 3050\nОперативная память: 16 GB\nНакопитель: 256 GB SSD",
-        "imageLink": "https://i.ibb.co/VcHy3Wv2/1.png",
+        "imageLinks": ["https://i.ibb.co/VcHy3Wv2/1.png"],
         "price": 8500
     },
     {
@@ -12,7 +12,7 @@
         "category": "Ноутбуки",
         "name": "Ноутбук Acer - core i3/4/128",
         "description": "",
-        "imageLink": "https://i.ibb.co/600DDFNP/2.jpg",
+        "imageLinks": ["https://i.ibb.co/600DDFNP/2.jpg"],
         "price": 3500
     },
     {
@@ -20,7 +20,7 @@
         "category": "Ноутбуки",
         "name": "Ноутбук Asus - core i7/32/1TB",
         "description": "",
-        "imageLink": "https://i.ibb.co/230ccxHp/3.png",
+        "imageLinks": ["https://i.ibb.co/230ccxHp/3.png"],
         "price": 3500
     },
     {
@@ -28,15 +28,15 @@
         "name": "Клавиатура Logitech",
         "category": "Клавиатуры",
         "description": "",
-        "imageLink": "https://i.ibb.co/jP8HFh8w/4.jpg",
+        "imageLinks": ["https://i.ibb.co/jP8HFh8w/4.jpg"],
         "price": 250
     },
     {
+        "id": 4,
         "name": "Красовка",
         "category": "Обуф",
         "description": "Мета",
-        "imageLink": "https://static.insales-cdn.com/images/products/1/3039/855968735/IMG_0712.JPG",
-        "price": 828,
-        "id": 4
+        "imageLinks": ["https://static.insales-cdn.com/images/products/1/3039/855968735/IMG_0712.JPG"],
+        "price": 828
     }
 ]

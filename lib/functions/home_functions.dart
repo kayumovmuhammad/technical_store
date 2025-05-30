@@ -1,18 +1,20 @@
-List getCategories(List items) {
+import 'package:technical_store/models/item_model.dart';
+
+List getCategories(List<ItemModel> items) {
   Set categories = {'Все'};
 
   for (var item in items) {
-    categories.add(item["category"]);
+    categories.add(item.categody);
   }
 
   return categories.toList();
 }
 
-List getProductsByCategory(List items) {
+List getProductsByCategory(List<ItemModel> items) {
   Set categories = {'Все'};
 
   for (var item in items) {
-    categories.add(item["category"]);
+    categories.add(item.categody);
   }
 
   List<List> productsByCategory = [];
@@ -20,7 +22,7 @@ List getProductsByCategory(List items) {
   for (var item in categories) {
     List products = [];
     for (var ind = 0; ind < items.length; ind++) {
-      if (items[ind]['category'] == item || item == 'Все') {
+      if (items[ind].categody == item || item == 'Все') {
         products.add(ind);
       }
     }
