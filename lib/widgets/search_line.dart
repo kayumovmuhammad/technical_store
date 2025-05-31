@@ -41,9 +41,14 @@ class _SearchLineState extends State<SearchLine> {
         homeProvider.setStatus(ShowStatus().showingResult);
       },
       decoration: InputDecoration(
+        prefixIcon: Icon(Icons.search),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(9),
+          borderRadius: BorderRadius.circular(20),
           borderSide: BorderSide.none,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: BorderSide(width: 0.5),
         ),
         filled: true,
         fillColor: kCancelButton,

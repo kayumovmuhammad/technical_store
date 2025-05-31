@@ -10,12 +10,7 @@ import 'package:technical_store/widgets/item_card.dart';
 
 class StaticItemsList extends StatefulWidget {
   final List productsByCategory;
-  final int maxItems;
-  const StaticItemsList({
-    super.key,
-    required this.productsByCategory,
-    required this.maxItems,
-  });
+  const StaticItemsList({super.key, required this.productsByCategory});
 
   @override
   State<StaticItemsList> createState() => _StaticItemsListState();
@@ -34,10 +29,8 @@ class _StaticItemsListState extends State<StaticItemsList> {
         crossAxisSpacing: kDefaultPadding / 2,
         childAspectRatio: 0.75,
       ),
-      itemCount: min(
-        widget.maxItems,
-        widget.productsByCategory[homeProvider.selectedCategory].length,
-      ),
+      itemCount:
+          min(30, widget.productsByCategory[homeProvider.selectedCategory].length),
       itemBuilder: (context, index) {
         ItemModel currentItem =
             dataProvider.data[widget.productsByCategory[homeProvider

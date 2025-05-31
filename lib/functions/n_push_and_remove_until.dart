@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 void nPushAndRemoveUntil(BuildContext context, Widget widget) {
-  Navigator.pushAndRemoveUntil(
+  Navigator.push(
     context,
-    MaterialPageRoute(builder: (context) => widget),
-    (Route<dynamic> route) => false,
+    PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => widget,
+    ),
   );
 }

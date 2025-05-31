@@ -44,15 +44,7 @@ class _MainDrawerState extends State<MainDrawer> {
             leading: Icon(Icons.home),
             title: Text('Главная', style: theme.textTheme.bodySmall),
             onTap: () {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (builder) {
-                    return Home();
-                  },
-                ),
-                (Route<dynamic> route) => false,
-              );
+              nPushAndRemoveUntil(context, Home());
             },
           ),
           ListTile(

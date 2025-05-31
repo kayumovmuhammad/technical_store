@@ -21,82 +21,72 @@ class ItemCard extends StatefulWidget {
 
 class _ItemCardState extends State<ItemCard> {
   bool isHovered = false;
-  bool isVisible = false;
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(milliseconds: 50), () {
-      setState(() {
-        isVisible = true;
-      });
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final dataProvider = Provider.of<DataProvider>(context);
-    return AnimatedOpacity(
-      opacity: isVisible ? 1.0 : 0.9,
-      duration: Duration(milliseconds: 200),
-      child: MouseRegion(
-        onEnter: (event) {
-          setState(() {
-            isHovered = true;
-          });
-        },
-        onExit: (event) {
-          setState(() {
-            isHovered = false;
-          });
-        },
-        child: GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder:
-                    (context) => AddToBasketScreen(
-                      currentItem: dataProvider.data[widget.mainIndex],
-                    ),
-              ),
-            );
-          },
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(9)),
-              border: Border.all(color: Colors.grey, width: 1),
+    return MouseRegion(
+      onEnter: (event) {
+        setState(() {
+          isHovered = true;
+        });
+      },
+      onExit: (event) {
+        setState(() {
+          isHovered = false;
+        });
+      },
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder:
+                  (context) => AddToBasketScreen(
+                    currentItem: dataProvider.data[widget.mainIndex],
+                  ),
             ),
-            child: Padding(
-              padding: EdgeInsets.all(kDefaultPadding / 2),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Center(
-                      child: CachedNetworkImage(
-                        imageUrl: widget.currentItem.imageLinks[0],
-                        placeholder:
-                            (context, url) => Center(
-                              child: CircularProgressIndicator(
-                                color: theme.primaryColor,
-                              ),
+          );
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(Radius.circular(20)),
+            border: Border.all(color: Colors.grey, width: 1),
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(kDefaultPadding / 2),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Center(
+                    child: CachedNetworkImage(
+                      imageUrl: widget.currentItem.imageLinks[0],
+                      placeholder:
+                          (context, url) => Center(
+                            child: CircularProgressIndicator(
+                              color: theme.primaryColor,
                             ),
-                      ),
+                          ),
                     ),
                   ),
-                  Text(
-                    widget.currentItem.name,
-                    style: theme.textTheme.headlineMedium,
-                  ),
-                  Text(
-                    "${widget.currentItem.price} с.",
-                    style: theme.textTheme.titleSmall,
-                  ),
-                ],
-              ),
+                ),
+                Text(
+                  widget.currentItem.name,
+                  style: theme.textTheme.headlineMedium,
+                ),
+                Text(
+                  "${widget.currentItem.price} с.",
+                  style: theme.textTheme.titleSmall,
+                ),
+              ],
             ),
           ),
         ),
