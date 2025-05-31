@@ -22,6 +22,8 @@ class _StaticItemsListState extends State<StaticItemsList> {
     final dataProvider = Provider.of<DataProvider>(context);
     final homeProvider = Provider.of<HomeProvider>(context);
     return GridView.builder(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
       gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
         maxCrossAxisExtent: 400,
         mainAxisExtent: 400,
@@ -29,8 +31,10 @@ class _StaticItemsListState extends State<StaticItemsList> {
         crossAxisSpacing: kDefaultPadding / 2,
         childAspectRatio: 0.75,
       ),
-      itemCount:
-          min(30, widget.productsByCategory[homeProvider.selectedCategory].length),
+      itemCount: min(
+        30,
+        widget.productsByCategory[homeProvider.selectedCategory].length,
+      ),
       itemBuilder: (context, index) {
         ItemModel currentItem =
             dataProvider.data[widget.productsByCategory[homeProvider

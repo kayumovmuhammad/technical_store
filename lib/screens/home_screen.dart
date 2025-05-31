@@ -42,6 +42,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    final ScrollController scroolbarController = ScrollController();
     final dataProvider = Provider.of<DataProvider>(context);
     final basketProvider = Provider.of<BasketProvider>(context);
     final homeProvider = Provider.of<HomeProvider>(context);
@@ -94,8 +95,8 @@ class _HomeState extends State<Home> {
             ],
           ),
         ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+        body: ListView(
+          // mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Padding(
               padding: EdgeInsets.fromLTRB(
@@ -108,67 +109,69 @@ class _HomeState extends State<Home> {
             ),
             SizedBox(
               height: 50,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: categories.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      homeProvider.setStatus(ShowStatus().showStatic);
-                      homeProvider.setSelectedCategory(index);
-                    },
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: kDefaultPadding / 2,
-                      ),
-                      child: Column(
-                        children: [
-                          Text(
-                            categories[index],
-                            style: TextStyle(
-                              color:
-                                  (index == (homeProvider.selectedCategory) &&
-                                          homeProvider.status ==
-                                              ShowStatus().showStatic)
-                                      ? kTextColor
-                                      : kTextLightColor,
-                              fontWeight:
-                                  (index == (homeProvider.selectedCategory) &&
-                                          homeProvider.status ==
-                                              ShowStatus().showStatic)
-                                      ? FontWeight.w600
-                                      : FontWeight.normal,
-                              fontSize: 17,
+              child: Scrollbar(
+                controller: scroolbarController,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  controller: scroolbarController,
+                  itemCount: categories.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        homeProvider.setStatus(ShowStatus().showStatic);
+                        homeProvider.setSelectedCategory(index);
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: kDefaultPadding / 2,
+                        ),
+                        child: Column(
+                          children: [
+                            Text(
+                              categories[index],
+                              style: TextStyle(
+                                color:
+                                    (index == (homeProvider.selectedCategory) &&
+                                            homeProvider.status ==
+                                                ShowStatus().showStatic)
+                                        ? kTextColor
+                                        : kTextLightColor,
+                                fontWeight:
+                                    (index == (homeProvider.selectedCategory) &&
+                                            homeProvider.status ==
+                                                ShowStatus().showStatic)
+                                        ? FontWeight.w600
+                                        : FontWeight.normal,
+                                fontSize: 17,
+                              ),
                             ),
-                          ),
-                          SizedBox(height: kDefaultPadding / 4),
-                          Container(
-                            height: 2,
-                            width: 30,
-                            decoration: BoxDecoration(
-                              color:
-                                  (index == (homeProvider.selectedCategory) &&
-                                          homeProvider.status ==
-                                              ShowStatus().showStatic)
-                                      ? kTextColor
-                                      : Colors.transparent,
+                            SizedBox(height: kDefaultPadding / 4),
+                            Container(
+                              height: 2,
+                              width: 30,
+                              decoration: BoxDecoration(
+                                color:
+                                    (index == (homeProvider.selectedCategory) &&
+                                            homeProvider.status ==
+                                                ShowStatus().showStatic)
+                                        ? kTextColor
+                                        : Colors.transparent,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(kDefaultPadding / 2),
-                child: getWidgetForShowing(
-                  homeProvider.status,
-                  productsByCategory,
-                  homeProvider.resultOfSearch,
-                ),
+            Padding(
+              padding: const EdgeInsets.all(kDefaultPadding / 2),
+              child: getWidgetForShowing(
+                homeProvider.status,
+                productsByCategory,
+                homeProvider.resultOfSearch,
               ),
             ),
             SizedBox(
@@ -189,7 +192,7 @@ class _HomeState extends State<Home> {
                       Icons.arrow_back_ios_new,
                       color: page != 0 ? Colors.black : Colors.transparent,
                     ),
-                  ),  
+                  ),
                   SizedBox(width: 10),
                   Text('${page + 1}', style: TextStyle(fontSize: 20)),
                   SizedBox(width: 10),
