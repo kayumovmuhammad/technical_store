@@ -16,11 +16,13 @@ class ShowStatus {
   String showStatic = "showStatic";
   String searching = "searching";
   String showingResult = "showingResult";
+  String nothingToShow = "nothingToShow";
 }
 
 class HomeProvider with ChangeNotifier {
   String status = "showStatic";
   int selectedCategory = 0;
+  int page = 0;
   List resultOfSearch = [];
   String searchable = '';
 
@@ -31,6 +33,11 @@ class HomeProvider with ChangeNotifier {
 
   void setSelectedCategory(int value) {
     selectedCategory = value;
+    notifyListeners();
+  }
+
+  void setPage(int value) {
+    page = value;
     notifyListeners();
   }
 }

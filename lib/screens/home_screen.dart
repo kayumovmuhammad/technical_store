@@ -14,11 +14,18 @@ Widget getWidgetForShowing(
   String status,
   List productsByCategory,
   List resultOfSearch,
+  int selectedCategory,
+  Function scrollToTop,
 ) {
   if (status == ShowStatus().showStatic) {
-    return StaticItemsList(productsByCategory: productsByCategory);
+    return StaticItemsList(
+      products: productsByCategory[selectedCategory],
+      scroolToTop: scrollToTop,
+    );
   } else if (status == ShowStatus().showingResult) {
-    return StaticItemsList(productsByCategory: [resultOfSearch]);
+    return StaticItemsList(products: resultOfSearch, scroolToTop: scrollToTop);
+  } else if (status == ShowStatus().nothingToShow) {
+    return Image.asset('assets/empty.jpg', height: 500);
   }
   return Center(child: Text("Поиск..."));
 }
@@ -31,24 +38,25 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  int page = 0;
-  List categories = [];
-  List productsByCategory = [];
+  final ScrollController scroolControllerCategories = ScrollController();
+  final ScrollController scroolControllerItems = ScrollController();
 
-  @override
-  void initState() {
-    super.initState();
+  void scrollToTop() {
+    scroolControllerItems.animateTo(
+      0,
+      duration: Duration(milliseconds: 500),
+      curve: Curves.easeOut,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    final ScrollController scroolbarController = ScrollController();
     final dataProvider = Provider.of<DataProvider>(context);
     final basketProvider = Provider.of<BasketProvider>(context);
     final homeProvider = Provider.of<HomeProvider>(context);
     final theme = Theme.of(context);
-    categories = getCategories(dataProvider.data);
-    productsByCategory = getProductsByCategory(dataProvider.data);
+    final categories = getCategories(dataProvider.data);
+    final productsByCategory = getProductsByCategory(dataProvider.data);
     return SafeArea(
       child: Scaffold(
         drawer: MainDrawer(),
@@ -96,6 +104,7 @@ class _HomeState extends State<Home> {
           ),
         ),
         body: ListView(
+          controller: scroolControllerItems,
           // mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Padding(
@@ -110,14 +119,15 @@ class _HomeState extends State<Home> {
             SizedBox(
               height: 50,
               child: Scrollbar(
-                controller: scroolbarController,
+                controller: scroolControllerCategories,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  controller: scroolbarController,
+                  controller: scroolControllerCategories,
                   itemCount: categories.length,
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () {
+                        homeProvider.page = 0;
                         homeProvider.setStatus(ShowStatus().showStatic);
                         homeProvider.setSelectedCategory(index);
                       },
@@ -172,39 +182,8 @@ class _HomeState extends State<Home> {
                 homeProvider.status,
                 productsByCategory,
                 homeProvider.resultOfSearch,
-              ),
-            ),
-            SizedBox(
-              height: 40,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                // crossAxisAlignment: ,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      if (page != 0) {
-                        setState(() {
-                          page--;
-                        });
-                      }
-                    },
-                    child: Icon(
-                      Icons.arrow_back_ios_new,
-                      color: page != 0 ? Colors.black : Colors.transparent,
-                    ),
-                  ),
-                  SizedBox(width: 10),
-                  Text('${page + 1}', style: TextStyle(fontSize: 20)),
-                  SizedBox(width: 10),
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        page++;
-                      });
-                    },
-                    child: Icon(Icons.arrow_forward_ios),
-                  ),
-                ],
+                homeProvider.selectedCategory,
+                scrollToTop,
               ),
             ),
           ],

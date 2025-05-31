@@ -58,7 +58,10 @@ class _ItemCardState extends State<ItemCard> {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(20)),
-            border: Border.all(color: Colors.grey, width: 1),
+            border: Border.all(
+              color: (isHovered ? Colors.black : Colors.grey),
+              width: 1,
+            ),
           ),
           child: Padding(
             padding: EdgeInsets.all(kDefaultPadding / 2),

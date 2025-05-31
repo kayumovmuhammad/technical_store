@@ -11,18 +11,9 @@ class SearchLine extends StatefulWidget {
   State<SearchLine> createState() => _SearchLineState();
 }
 
-List<String> getSuggestions(data) {
-  List<String> list = [];
-
-  for (var item in data) {
-    list.add(item['name']);
-  }
-
-  return list;
-}
-
 class _SearchLineState extends State<SearchLine> {
   var selectedValue = SearchFieldListItem('');
+
   @override
   Widget build(BuildContext context) {
     final homeProvider = Provider.of<HomeProvider>(context);
@@ -35,10 +26,15 @@ class _SearchLineState extends State<SearchLine> {
         homeProvider.searchable = value;
       },
       onSubmitted: (value) async {
+        homeProvider.page = 0;
         homeProvider.setStatus(ShowStatus().searching);
         homeProvider.selectedCategory = 0;
         homeProvider.resultOfSearch = await getSearchableResult(value);
-        homeProvider.setStatus(ShowStatus().showingResult);
+        if (homeProvider.resultOfSearch.isNotEmpty) {
+          homeProvider.setStatus(ShowStatus().showingResult);
+        } else {
+          homeProvider.setStatus(ShowStatus().nothingToShow);
+        }
       },
       decoration: InputDecoration(
         prefixIcon: Icon(Icons.search),
