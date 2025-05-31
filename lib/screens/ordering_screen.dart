@@ -147,7 +147,7 @@ class _OrderingScreenState extends State<OrderingScreen> {
                   'name': name,
                 });
 
-                await sendOrder(
+                sendOrder(
                   basketProvider.basket.keys.toList(),
                   basketProvider.basket.values.toList(),
                   number,

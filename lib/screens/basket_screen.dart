@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:technical_store/constants.dart';
@@ -73,16 +74,21 @@ class _BasketScreenState extends State<BasketScreen> {
                         vertical: kDefaultPadding / 2,
                       ),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Center(
                             child: ListTile(
                               title: SizedBox(
                                 height: 100,
                                 width: 100,
-                                child: Image.network(
-                                  items[index].imageLinks[0],
-                                  alignment: Alignment.topLeft,
+                                child: CachedNetworkImage(
+                                  alignment: Alignment.bottomLeft,
+                                  imageUrl: items[index].imageLinks[0],
+                                  placeholder:
+                                      (context, url) => Center(
+                                        child: CircularProgressIndicator(
+                                          color: theme.primaryColor,
+                                        ),
+                                      ),
                                 ),
                               ),
                               trailing: SizedBox(
@@ -97,8 +103,8 @@ class _BasketScreenState extends State<BasketScreen> {
                                         backgroundColor: theme.primaryColor,
                                       ),
                                       onPressed: () {
-                                        if (basketProvider
-                                                .basket[items[index].id] <
+                                        if (basketProvider.basket[items[index]
+                                                .id] <
                                             20) {
                                           setState(() {
                                             basketProvider.addToBasket(
@@ -116,8 +122,7 @@ class _BasketScreenState extends State<BasketScreen> {
                                       width: 70,
                                       child: Center(
                                         child: Text(
-                                          basketProvider
-                                              .basket[items[index].id]
+                                          basketProvider.basket[items[index].id]
                                               .toString(),
                                           style: TextStyle(
                                             color: kTextColor,
@@ -134,8 +139,8 @@ class _BasketScreenState extends State<BasketScreen> {
                                         backgroundColor: theme.primaryColor,
                                       ),
                                       onPressed: () {
-                                        if (basketProvider
-                                                .basket[items[index].id] >
+                                        if (basketProvider.basket[items[index]
+                                                .id] >
                                             0) {
                                           setState(() {
                                             basketProvider.removeFormBasket(
@@ -163,7 +168,7 @@ class _BasketScreenState extends State<BasketScreen> {
                           Text(
                             "${items[index].name}: ${items[index].price} с.",
                             style: theme.textTheme.bodySmall,
-                            textAlign: TextAlign.center,
+                            textAlign: TextAlign.start,
                           ),
                         ],
                       ),
