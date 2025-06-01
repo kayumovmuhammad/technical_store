@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:technical_store/constants.dart';
 import 'package:technical_store/models/item_model.dart';
+import 'package:technical_store/providers/basket_provider.dart';
 
 class DescriptionWidget extends StatefulWidget {
   final ItemModel currentItem;
-  final Function getCounts, addCounts, reduceCounts;
-  const DescriptionWidget({
-    super.key,
-    required this.currentItem,
-    required this.addCounts,
-    required this.getCounts,
-    required this.reduceCounts,
-  });
+  const DescriptionWidget({super.key, required this.currentItem});
 
   @override
   State<DescriptionWidget> createState() => _DescriptionWidgetState();
@@ -20,6 +15,13 @@ class DescriptionWidget extends StatefulWidget {
 class _DescriptionWidgetState extends State<DescriptionWidget> {
   @override
   Widget build(BuildContext context) {
+    final basketProvider = Provider.of<BasketProvider>(context);
+    final basket = basketProvider.basket;
+    final id = widget.currentItem.id;
+    int count = 0;
+    if (basket[id] != null) {
+      count = basket[id]!.count;
+    }
     final theme = Theme.of(context);
     return Column(
       children: [
@@ -45,50 +47,63 @@ class _DescriptionWidgetState extends State<DescriptionWidget> {
           style: theme.textTheme.headlineLarge,
           textAlign: TextAlign.center,
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                iconColor: kTextColor,
-                fixedSize: Size(70, 50),
-                backgroundColor: theme.primaryColor,
-              ),
-              onPressed: () {
-                widget.addCounts();
-              },
-              child: Icon(Icons.add),
+        if (count == 0)
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              iconColor: kTextColor,
+              fixedSize: Size(210, 50),
+              backgroundColor: theme.primaryColor,
             ),
-            SizedBox(
-              height: 50,
-              width: 70,
-              child: Center(
-                child: Text(
-                  widget.getCounts().toString(),
-                  style: TextStyle(
-                    color: kTextColor,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+            onPressed: () {
+              basketProvider.addToBasket(widget.currentItem);
+            },
+            child: Text("В корзину", style: theme.textTheme.bodySmall),
+          )
+        else
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  iconColor: kTextColor,
+                  fixedSize: Size(70, 50),
+                  backgroundColor: theme.primaryColor,
+                ),
+                onPressed: () {
+                  basketProvider.addToBasket(widget.currentItem);
+                },
+                child: Icon(Icons.add),
+              ),
+              SizedBox(
+                height: 50,
+                width: 70,
+                child: Center(
+                  child: Text(
+                    count.toString(),
+                    style: TextStyle(
+                      color: kTextColor,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                iconColor: kTextColor,
-                fixedSize: Size(70, 50),
-                backgroundColor: theme.primaryColor,
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  iconColor: kTextColor,
+                  fixedSize: Size(70, 50),
+                  backgroundColor: theme.primaryColor,
+                ),
+                onPressed: () {
+                  basketProvider.removeFormBasket(widget.currentItem);
+                },
+                child: Icon(Icons.remove),
               ),
-              onPressed: () {
-                widget.reduceCounts();
-              },
-              child: Icon(Icons.remove),
-            ),
-          ],
-        ),
+            ],
+          ),
         SizedBox(height: kDefaultPadding / 2),
         Text(
-          "Общая цена: ${widget.currentItem.price * widget.getCounts()} с.",
+          "Общая цена: ${widget.currentItem.price * count} с.",
           style: theme.textTheme.headlineLarge,
           textAlign: TextAlign.center,
         ),
