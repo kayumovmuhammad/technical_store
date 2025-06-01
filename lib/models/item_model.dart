@@ -1,7 +1,7 @@
 class ItemModel {
   int id;
   String name;
-  String categody;
+  String category;
   String description;
   List imageLinks;
   int price;
@@ -9,7 +9,7 @@ class ItemModel {
   ItemModel({
     required this.id,
     required this.name,
-    required this.categody,
+    required this.category,
     required this.description,
     required this.imageLinks,
     required this.price,

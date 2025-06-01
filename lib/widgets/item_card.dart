@@ -1,18 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:technical_store/constants.dart';
 import 'package:technical_store/models/item_model.dart';
-import 'package:technical_store/providers/data_provider.dart';
 import 'package:technical_store/screens/add_to_basket_screen.dart';
 
 class ItemCard extends StatefulWidget {
   final ItemModel currentItem;
-  final int mainIndex;
   const ItemCard({
     super.key,
     required this.currentItem,
-    required this.mainIndex,
   });
 
   @override
@@ -30,7 +26,6 @@ class _ItemCardState extends State<ItemCard> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final dataProvider = Provider.of<DataProvider>(context);
     return MouseRegion(
       onEnter: (event) {
         setState(() {
@@ -49,7 +44,7 @@ class _ItemCardState extends State<ItemCard> {
             MaterialPageRoute(
               builder:
                   (context) => AddToBasketScreen(
-                    currentItem: dataProvider.data[widget.mainIndex],
+                    currentItem: widget.currentItem,
                   ),
             ),
           );

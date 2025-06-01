@@ -1,6 +1,7 @@
 from fastapi import FastAPI
+from pydantic import BaseModel
 from models import Order
-from config import ADMIN_CHAT_ID, BOT_TOKEN
+from config import BOT_TOKEN, ADMIN_CHAT_ID, ITEM_COUNT_IN_PAGE, MAIN_CATEGORY
 import json
 import requests
 from fastapi.middleware.cors import CORSMiddleware
@@ -22,20 +23,68 @@ async def get_data():
     
     return data
 
-@app.get("/info/find/search")
-async def find_for_search(searchable: str):
-    indexes = []
+@app.get("/info/categories")
+async def get_categories():
+    with open("data.json", encoding='utf-8') as dt:
+        data = json.loads(dt.read())
+
+    categories = {
+        MAIN_CATEGORY: len(data)
+    }
+
+    for item in data:
+        category = item['category']
+
+        if (category not in categories):
+            categories[category] = 0
+
+        categories[category] += 1
+
+    for category in categories.keys():
+        category_count = categories[category]
+        categories[category] = (category_count + ITEM_COUNT_IN_PAGE - 1) // ITEM_COUNT_IN_PAGE
+
+    return categories
+
+
+@app.get("/info/data/part")
+async def get_part_of_data(category: str, page: int):
+    answer: list = []
+    count = 0
+    with open("data.json", encoding='utf-8') as dt:
+        data = json.loads(dt.read())
+
+    for item in data:
+        if (item['category'] == category or category == MAIN_CATEGORY):
+            count += 1
+            if (count > ITEM_COUNT_IN_PAGE * page and count <= ITEM_COUNT_IN_PAGE * (page+1)):
+                answer.append(item)
+
+            if count > ITEM_COUNT_IN_PAGE * (page+1):
+                break
+
+    return answer
+
+@app.get("/info/search")
+async def find_for_search(searchable: str, page: int):
+    answer = []
+    count = 0
     with open("data.json", encoding='utf-8') as dt:
         data = json.loads(dt.read())
     
-    for it in data:
+    for item in data:
         searchable = searchable.lower().replace(" ", "")
-        search = (it['name'].lower() + it['description'].lower()).replace(" ", "")
+        search = (item['name'].lower() + item['description'].lower()).replace(" ", "")
         
         if search.find(searchable) != -1:
-            indexes.append(it['id'])
-            
-    return indexes
+            count += 1
+            if (count > ITEM_COUNT_IN_PAGE * page and count <= ITEM_COUNT_IN_PAGE * (page+1)):
+                answer.append(item)
+
+    return {
+        'data': answer,
+        'pageCount': (count + ITEM_COUNT_IN_PAGE - 1) // ITEM_COUNT_IN_PAGE
+    }
     
 @app.post("/sale")
 async def sale_items(order: Order):

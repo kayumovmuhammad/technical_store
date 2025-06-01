@@ -17,24 +17,23 @@ class _SearchLineState extends State<SearchLine> {
   @override
   Widget build(BuildContext context) {
     final homeProvider = Provider.of<HomeProvider>(context);
-    String query = homeProvider.searchable;
 
     return TextField(
-      controller: TextEditingController(text: query),
+      controller: TextEditingController(text: homeProvider.query),
       onChanged: (value) {
-        query = value;
-        homeProvider.searchable = value;
+        homeProvider.query = value;
       },
       onSubmitted: (value) async {
-        homeProvider.page = 0;
         homeProvider.setStatus(ShowStatus().searching);
-        homeProvider.selectedCategory = 0;
-        homeProvider.resultOfSearch = await getSearchableResult(value);
-        if (homeProvider.resultOfSearch.isNotEmpty) {
-          homeProvider.setStatus(ShowStatus().showingResult);
-        } else {
-          homeProvider.setStatus(ShowStatus().nothingToShow);
-        }
+
+        List required = await getSearchableResult(homeProvider.query, 0);
+
+        homeProvider.page = 0;
+        homeProvider.products = required[0];
+        homeProvider.selectedCategory = inf;
+        homeProvider.searchable = homeProvider.query;
+        homeProvider.searchPageCount = required[1];
+        homeProvider.setStatus(ShowStatus().showSearch);
       },
       decoration: InputDecoration(
         prefixIcon: Icon(Icons.search),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:technical_store/constants.dart';
-import 'package:technical_store/functions/home_functions.dart';
+import 'package:technical_store/models/item_model.dart';
 import 'package:technical_store/widgets/main_drawer.dart';
 import 'package:technical_store/providers/basket_provider.dart';
 import 'package:technical_store/providers/data_provider.dart';
@@ -12,22 +12,38 @@ import 'package:technical_store/widgets/static_items_list.dart';
 
 Widget getWidgetForShowing(
   String status,
-  List productsByCategory,
-  List resultOfSearch,
-  int selectedCategory,
+  List<ItemModel> products,
   Function scrollToTop,
+  BuildContext context,
 ) {
-  if (status == ShowStatus().showStatic) {
-    return StaticItemsList(
-      products: productsByCategory[selectedCategory],
-      scroolToTop: scrollToTop,
-    );
-  } else if (status == ShowStatus().showingResult) {
-    return StaticItemsList(products: resultOfSearch, scroolToTop: scrollToTop);
-  } else if (status == ShowStatus().nothingToShow) {
+  final dataProvider = Provider.of<DataProvider>(context);
+  final homeProvider = Provider.of<HomeProvider>(context);
+  if (status == ShowStatus().searching) {
+    return Center(child: Text("Поиск..."));
+  }
+  if (products.isEmpty) {
     return Image.asset('assets/empty.jpg', height: 500);
   }
-  return Center(child: Text("Поиск..."));
+  if (status == ShowStatus().showStatic) {
+    List pages = dataProvider.categories.values.toList();
+    List categories = dataProvider.categories.keys.toList();
+    int selectedCategory = homeProvider.selectedCategory;
+    String category = categories[selectedCategory];
+    int pageCount = pages[selectedCategory];
+
+    return StaticItemsList(
+      products: products,
+      scrollToTop: scrollToTop,
+      pageCount: pageCount,
+      category: category,
+    );
+  }
+  return StaticItemsList(
+    products: products,
+    scrollToTop: scrollToTop,
+    pageCount: homeProvider.searchPageCount,
+    category: '',
+  );
 }
 
 class Home extends StatefulWidget {
@@ -38,12 +54,13 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final ScrollController scroolControllerCategories = ScrollController();
-  final ScrollController scroolControllerItems = ScrollController();
+  final ScrollController scrollControllerCategories = ScrollController();
+  final ScrollController scrollControllerItems = ScrollController();
+  final double up = 0;
 
   void scrollToTop() {
-    scroolControllerItems.animateTo(
-      0,
+    scrollControllerItems.animateTo(
+      up,
       duration: Duration(milliseconds: 500),
       curve: Curves.easeOut,
     );
@@ -55,8 +72,7 @@ class _HomeState extends State<Home> {
     final basketProvider = Provider.of<BasketProvider>(context);
     final homeProvider = Provider.of<HomeProvider>(context);
     final theme = Theme.of(context);
-    final categories = getCategories(dataProvider.data);
-    final productsByCategory = getProductsByCategory(dataProvider.data);
+    final Map categories = dataProvider.categories;
     return SafeArea(
       child: Scaffold(
         drawer: MainDrawer(),
@@ -104,7 +120,7 @@ class _HomeState extends State<Home> {
           ),
         ),
         body: ListView(
-          controller: scroolControllerItems,
+          controller: scrollControllerItems,
           // mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Padding(
@@ -119,17 +135,24 @@ class _HomeState extends State<Home> {
             SizedBox(
               height: 50,
               child: Scrollbar(
-                controller: scroolControllerCategories,
+                controller: scrollControllerCategories,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  controller: scroolControllerCategories,
+                  controller: scrollControllerCategories,
                   itemCount: categories.length,
                   itemBuilder: (context, index) {
                     return GestureDetector(
-                      onTap: () {
+                      onTap: () async {
+                        homeProvider.setStatus(ShowStatus().searching);
+
                         homeProvider.page = 0;
-                        homeProvider.setStatus(ShowStatus().showStatic);
+                        homeProvider.products = await getDataByCategory(
+                          categories.keys.toList()[index],
+                          0,
+                        );
                         homeProvider.setSelectedCategory(index);
+
+                        homeProvider.setStatus(ShowStatus().showStatic);
                       },
                       child: Container(
                         padding: EdgeInsets.symmetric(
@@ -138,7 +161,7 @@ class _HomeState extends State<Home> {
                         child: Column(
                           children: [
                             Text(
-                              categories[index],
+                              categories.keys.toList()[index],
                               style: TextStyle(
                                 color:
                                     (index == (homeProvider.selectedCategory) &&
@@ -180,10 +203,9 @@ class _HomeState extends State<Home> {
               padding: const EdgeInsets.all(kDefaultPadding / 2),
               child: getWidgetForShowing(
                 homeProvider.status,
-                productsByCategory,
-                homeProvider.resultOfSearch,
-                homeProvider.selectedCategory,
+                homeProvider.products,
                 scrollToTop,
+                context,
               ),
             ),
           ],

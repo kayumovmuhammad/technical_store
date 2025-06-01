@@ -1,30 +1,70 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:technical_store/constants.dart';
+import 'package:technical_store/models/item_model.dart';
 
-Future<List> getSearchableResult(String searchable) async {
+Future<List> getSearchableResult(String searchable, int page) async {
   var dio = Dio();
   var response = await dio.get(
-    "$ipAddress/info/find/search?searchable=$searchable",
+    "$ipAddress/info/search?searchable=$searchable&page=$page",
   );
-  var data = response.data as List;
 
-  return data;
+  List data = response.data['data'];
+  int pageCount = response.data['pageCount'];
+  List<ItemModel> answer = [];
+
+  for (var item in data) {
+    answer.add(
+      ItemModel(
+        id: item["id"],
+        name: item["name"],
+        category: item["category"],
+        description: item["description"],
+        imageLinks: item["imageLinks"],
+        price: item["price"],
+      ),
+    );
+  }
+
+  return [answer, pageCount];
+}
+
+Future<List<ItemModel>> getDataByCategory(String category, int page) async {
+  var dio = Dio();
+  var response = await dio.get(
+    "$ipAddress/info/data/part?category=$category&page=$page",
+  );
+  List data = response.data;
+  List<ItemModel> answer = [];
+
+  for (var item in data) {
+    answer.add(
+      ItemModel(
+        id: item["id"],
+        name: item["name"],
+        category: item["category"],
+        description: item["description"],
+        imageLinks: item["imageLinks"],
+        price: item["price"],
+      ),
+    );
+  }
+
+  return answer;
 }
 
 class ShowStatus {
   String showStatic = "showStatic";
+  String showSearch = "showSearch";
   String searching = "searching";
-  String showingResult = "showingResult";
-  String nothingToShow = "nothingToShow";
 }
 
 class HomeProvider with ChangeNotifier {
-  String status = "showStatic";
-  int selectedCategory = 0;
-  int page = 0;
-  List resultOfSearch = [];
-  String searchable = '';
+  String status = ShowStatus().showStatic, searchable = '', query = '';
+  int selectedCategory = 0, page = 0, searchPageCount = 0;
+  List<ItemModel> products;
+
+  HomeProvider({required this.products});
 
   void setStatus(String value) {
     status = value;
@@ -38,6 +78,11 @@ class HomeProvider with ChangeNotifier {
 
   void setPage(int value) {
     page = value;
+    notifyListeners();
+  }
+
+  void setProducts(List<ItemModel> newValue) {
+    products = newValue;
     notifyListeners();
   }
 }

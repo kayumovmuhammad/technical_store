@@ -10,10 +10,10 @@ Future<Map> initSettingsData() async {
 
   Map answer = {};
 
-  for (var i in items) {
-    answer[i] = box.get(i);
-    if (box.get(i) == null) {
-      answer[i] = '';
+  for (var item in items) {
+    answer[item] = box.get(item);
+    if (box.get(item) == null) {
+      answer[item] = '';
     }
   }
 
