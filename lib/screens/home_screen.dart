@@ -76,6 +76,7 @@ class _HomeState extends State<Home> {
     return SafeArea(
       child: Scaffold(
         drawer: MainDrawer(),
+        floatingActionButtonAnimator: FloatingActionButtonAnimator.noAnimation,
         floatingActionButton:
             basketProvider.totalPrice == 0
                 ? null

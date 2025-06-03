@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:technical_store/constants.dart';
 import 'package:technical_store/models/item_model.dart';
 import 'package:technical_store/providers/basket_provider.dart';
+import 'package:technical_store/widgets/add_remove_btn.dart';
 
 class DescriptionWidget extends StatefulWidget {
   final ItemModel currentItem;
@@ -42,65 +43,7 @@ class _DescriptionWidgetState extends State<DescriptionWidget> {
             textAlign: TextAlign.center,
           ),
         SizedBox(height: kDefaultPadding / 2),
-        Text(
-          "Количество:",
-          style: theme.textTheme.headlineLarge,
-          textAlign: TextAlign.center,
-        ),
-        if (count == 0)
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              iconColor: kTextColor,
-              fixedSize: Size(210, 50),
-              backgroundColor: theme.primaryColor,
-            ),
-            onPressed: () {
-              basketProvider.addToBasket(widget.currentItem);
-            },
-            child: Text("В корзину", style: theme.textTheme.bodySmall),
-          )
-        else
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  iconColor: kTextColor,
-                  fixedSize: Size(70, 50),
-                  backgroundColor: theme.primaryColor,
-                ),
-                onPressed: () {
-                  basketProvider.addToBasket(widget.currentItem);
-                },
-                child: Icon(Icons.add),
-              ),
-              SizedBox(
-                height: 50,
-                width: 70,
-                child: Center(
-                  child: Text(
-                    count.toString(),
-                    style: TextStyle(
-                      color: kTextColor,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  iconColor: kTextColor,
-                  fixedSize: Size(70, 50),
-                  backgroundColor: theme.primaryColor,
-                ),
-                onPressed: () {
-                  basketProvider.removeFormBasket(widget.currentItem);
-                },
-                child: Icon(Icons.remove),
-              ),
-            ],
-          ),
+        AddRemoveBtn(currentItem: widget.currentItem),
         SizedBox(height: kDefaultPadding / 2),
         Text(
           "Общая цена: ${widget.currentItem.price * count} с.",

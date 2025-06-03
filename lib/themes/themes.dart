@@ -4,10 +4,14 @@ import 'package:technical_store/constants.dart';
 ThemeData lightTheme = ThemeData(
   drawerTheme: DrawerThemeData(backgroundColor: Colors.white),
   primaryColor: Colors.orange,
-  dialogTheme: DialogTheme(backgroundColor: Colors.white),
+  dialogTheme: DialogThemeData(
+    backgroundColor: Colors.white,
+  ),
   focusColor: Colors.white,
   iconTheme: IconThemeData(color: Colors.black),
-  cardTheme: CardTheme(color: Colors.white),
+  cardTheme: CardThemeData(
+    color: Colors.white
+  ),
   scaffoldBackgroundColor: Colors.white,
   appBarTheme: AppBarTheme(
     titleTextStyle: TextStyle(

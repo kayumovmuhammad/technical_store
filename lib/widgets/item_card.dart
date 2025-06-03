@@ -3,13 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:technical_store/constants.dart';
 import 'package:technical_store/models/item_model.dart';
 import 'package:technical_store/screens/add_to_basket_screen.dart';
+import 'package:technical_store/widgets/add_remove_btn.dart';
 
 class ItemCard extends StatefulWidget {
   final ItemModel currentItem;
-  const ItemCard({
-    super.key,
-    required this.currentItem,
-  });
+  const ItemCard({super.key, required this.currentItem});
 
   @override
   State<ItemCard> createState() => _ItemCardState();
@@ -43,9 +41,8 @@ class _ItemCardState extends State<ItemCard> {
             context,
             MaterialPageRoute(
               builder:
-                  (context) => AddToBasketScreen(
-                    currentItem: widget.currentItem,
-                  ),
+                  (context) =>
+                      AddToBasketScreen(currentItem: widget.currentItem),
             ),
           );
         },
@@ -84,6 +81,8 @@ class _ItemCardState extends State<ItemCard> {
                   "${widget.currentItem.price} с.",
                   style: theme.textTheme.titleSmall,
                 ),
+                SizedBox(height: kDefaultPadding / 2),
+                AddRemoveBtn(currentItem: widget.currentItem),
               ],
             ),
           ),

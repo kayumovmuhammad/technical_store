@@ -37,7 +37,7 @@ class _StaticItemsListState extends State<StaticItemsList> {
           physics: NeverScrollableScrollPhysics(),
           gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
             maxCrossAxisExtent: 400,
-            mainAxisExtent: 400,
+            mainAxisExtent: 500,
             mainAxisSpacing: kDefaultPadding / 2,
             crossAxisSpacing: kDefaultPadding / 2,
             childAspectRatio: 0.75,

@@ -24,6 +24,9 @@ class BasketProvider with ChangeNotifier {
   void removeFormBasket(ItemModel item) {
     basket[item.id]?.count--;
     totalPrice -= item.price;
+    if (basket[item.id]?.count == 0) {
+      basket.remove(item.id);
+    }
     notifyListeners();
   }
 
