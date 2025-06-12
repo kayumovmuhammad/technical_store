@@ -12,7 +12,7 @@ import 'package:technical_store/providers/settings_provider.dart';
 Future<void> main() async {
   await Hive.initFlutter();
   Map categories = await initCategories();
-  List<ItemModel> products = await getDataByCategory(mainCategory, 1);
+  List<ItemModel> products = await getDataByCategory(mainCategory, 0);
   Map settings = await initSettingsData();
 
   runApp(

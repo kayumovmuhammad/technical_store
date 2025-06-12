@@ -103,7 +103,7 @@ class _OrderingScreenState extends State<OrderingScreen> {
                   ),
                   Text("Адрес:", style: theme.textTheme.headlineSmall),
                   TextField(
-                    controller: TextEditingController(text: address),
+                    controller: addressController,
                     onChanged: (value) {
                       address = value;
                     },
@@ -123,7 +123,6 @@ class _OrderingScreenState extends State<OrderingScreen> {
                   ),
                   TextField(
                     maxLines: 3,
-                    controller: addressController,
                     onChanged: (value) {
                       description = value;
                     },
@@ -138,7 +137,9 @@ class _OrderingScreenState extends State<OrderingScreen> {
             height: 80,
             width: (MediaQuery.of(context).size.width),
             child: ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor: theme.primaryColor),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: theme.primaryColor,
+              ),
               onPressed: () async {
                 settingsProvider.updateSettings({
                   'number': number,
@@ -148,7 +149,7 @@ class _OrderingScreenState extends State<OrderingScreen> {
 
                 sendOrder(
                   basketProvider.basket.keys.toList(),
-                  basketProvider.basket.values.toList(),
+                  basketProvider.getCounts(),
                   number,
                   address,
                   name,

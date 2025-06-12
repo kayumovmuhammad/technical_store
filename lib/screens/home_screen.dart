@@ -19,7 +19,7 @@ Widget getWidgetForShowing(
   final dataProvider = Provider.of<DataProvider>(context);
   final homeProvider = Provider.of<HomeProvider>(context);
   if (status == ShowStatus().searching) {
-    return Center(child: Text("Поиск..."));
+    return Center(child: Text("Загрузка..."));
   }
   if (products.isEmpty) {
     return Image.asset('assets/empty.jpg', height: 500);

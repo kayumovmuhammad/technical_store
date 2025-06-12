@@ -12,6 +12,16 @@ class BasketProvider with ChangeNotifier {
   Map<int, BasketItemModel> basket = {};
   int totalPrice = 0;
 
+  List getCounts() {
+    List counts = [];
+
+    for (var basketItem in basket.values.toList()) {
+      counts.add(basketItem.count);
+    }
+
+    return counts;
+  }
+
   void addToBasket(ItemModel item) {
     if (basket[item.id] == null) {
       basket[item.id] = BasketItemModel(item: item, count: 0);

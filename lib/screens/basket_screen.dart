@@ -1,11 +1,27 @@
+import 'dart:math';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:technical_store/constants.dart';
 import 'package:technical_store/functions/n_push_and_remove_until.dart';
 import 'package:technical_store/providers/basket_provider.dart';
+import 'package:technical_store/providers/settings_provider.dart';
 import 'package:technical_store/screens/home_screen.dart';
+import 'package:technical_store/screens/ordering_screen.dart';
 import 'package:technical_store/widgets/add_remove_btn.dart';
+import 'package:technical_store/widgets/yes_no_dialog.dart';
+
+String getNameWithLimit(String name, int limit) {
+  if (name.length <= limit) {
+    return name;
+  }
+
+  String newName = name.substring(0, limit - 3);
+  newName += '...';
+
+  return newName;
+}
 
 class BasketScreen extends StatefulWidget {
   const BasketScreen({super.key});
@@ -18,6 +34,7 @@ class _BasketScreenState extends State<BasketScreen> {
   @override
   Widget build(BuildContext context) {
     final basketProvider = Provider.of<BasketProvider>(context);
+    final settingsProvider = Provider.of<SettingsProvider>(context);
     final basket = basketProvider.basket;
     final ids = basket.keys.toList();
 
@@ -28,6 +45,21 @@ class _BasketScreenState extends State<BasketScreen> {
         nPushAndRemoveUntil(context, Home());
       }
     });
+
+    final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
+
+    var imageSide =
+        (min(width, height) - kDefaultPadding - kDefaultPadding / 2) / 3 - 20;
+    var textWith =
+        2 * (min(width, height) - kDefaultPadding - kDefaultPadding / 2) / 3 -
+        20;
+
+    final isPhone = (height > width);
+    if (!isPhone) {
+      imageSide = imageSide / 2;
+      textWith = textWith / 2;
+    }
 
     return SafeArea(
       child: Scaffold(
@@ -47,15 +79,60 @@ class _BasketScreenState extends State<BasketScreen> {
         floatingActionButtonAnimator: FloatingActionButtonAnimator.noAnimation,
         body: ListView(
           children: [
-            SizedBox(height: 60),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(kDefaultPadding / 2),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: theme.primaryColor,
+                      fixedSize: Size(300, 50),
+                    ),
+                    onPressed: () {
+                      nPushAndRemoveUntil(
+                        context,
+                        OrderingScreen(
+                          number: settingsProvider.settings['number'],
+                          address: settingsProvider.settings['address'],
+                          name: settingsProvider.settings['name'],
+                        ),
+                      );
+                    },
+                    child: Text("Заказать", style: theme.textTheme.bodySmall),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(kDefaultPadding / 2),
+                  child: GestureDetector(
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) {
+                          return YesNoDialog(
+                            answer:
+                                'Вы уверены что хотите удалить все выбранные товары из корзины?',
+                            doIfYes: () {
+                              basketProvider.clearBasket();
+                            },
+                          );
+                        },
+                      );
+                    },
+                    child: Icon(Icons.delete, color: Colors.red),
+                  ),
+                ),
+                SizedBox(width: kDefaultPadding / 2),
+              ],
+            ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: kDefaultPadding / 2),
               child: GridView.builder(
-                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 1000,
-                  mainAxisSpacing: 10,
-                  crossAxisSpacing: 10,
-                  mainAxisExtent: 220,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: isPhone ? 1 : 2,
+                  mainAxisExtent: imageSide + kDefaultPadding + 50,
+                  mainAxisSpacing: kDefaultPadding / 2,
+                  crossAxisSpacing: kDefaultPadding / 2,
                 ),
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
@@ -64,6 +141,7 @@ class _BasketScreenState extends State<BasketScreen> {
                   final currentItem = basket[ids[index]]!.item;
                   final count = basket[ids[index]]!.count;
                   return Container(
+                    width: 100,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -78,8 +156,14 @@ class _BasketScreenState extends State<BasketScreen> {
                             Padding(
                               padding: EdgeInsets.all(kDefaultPadding / 2),
                               child: CachedNetworkImage(
-                                height: 200,
-                                width: 200,
+                                placeholder:
+                                    (context, url) => Center(
+                                      child: CircularProgressIndicator(
+                                        color: theme.primaryColor,
+                                      ),
+                                    ),
+                                height: imageSide,
+                                width: imageSide,
                                 imageUrl:
                                     basket[ids[index]]!.item.imageLinks[0],
                               ),
@@ -93,12 +177,18 @@ class _BasketScreenState extends State<BasketScreen> {
                           ),
                           child: Column(
                             children: [
-                              Container(
-                                width: 200,
+                              SizedBox(
+                                width: textWith,
                                 // padding: EdgeInsets.only(top: kDefaultPadding),
                                 child: Text(
-                                  basket[ids[index]]!.item.name,
-                                  style: theme.textTheme.bodyMedium,
+                                  getNameWithLimit(
+                                    basket[ids[index]]!.item.name,
+                                    23,
+                                  ),
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
                                 ),
                               ),
                               Text("${currentItem.price * count} с."),
